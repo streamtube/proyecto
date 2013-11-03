@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sudo su
-
 sudo apt-get install git
 
 cd /var/www/
