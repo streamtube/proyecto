@@ -29,10 +29,11 @@ rm PhpStorm.tar.gz
 
 mv $PHPSTORM_DIR phpstorm
 
-ln -s /usr/bin/phpstorm $HOME/phpstorm/bin/phpstorm.sh
+ln -s $HOME/phpstorm/bin/phpstorm.sh /usr/bin/phpstorm 
 
 echo -e "Done Phpstorm."
 
+sudo apt-get install g++
 
 mkdir /tmp/node-install
 cd /tmp/node-install
