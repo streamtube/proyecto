@@ -16,4 +16,6 @@ Para la próxima semana se investigarán las videoconferencias en webRTC.
 6. Recibimos del otro usuario el servidor ICE que ha eligido
 7. ¡Conexión!
 
+Enlaces:    
+https://developer.mozilla.org/es/docs/WebRTC/Peer-to-peer_communications_with_WebRTC
 
