@@ -7,6 +7,8 @@ cd /var/www/
 echo "Usuario y password de github...";
 git clone https://github.com/streamtube/proyecto.git
 
+cd proyecto
+
 git status
 
 git pull
