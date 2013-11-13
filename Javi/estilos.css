@@ -1,4 +1,15 @@
+#video {
+    text-align: center;
+}
 #ytplayer {
     width: 640px;
     height: 390px;
+    border-width: 25px;
+    border-color: yellow;
+}
+.titulos {
+    text-align: center;
+    color: red;
+    font-weight:bold;
+    font-size: 30px;
 }
