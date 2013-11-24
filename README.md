@@ -1,6 +1,16 @@
 Proyecto StreamTube
 ---------
 
+- Domingo 17/11/2013
+Se ha investigado información variada sobre webRTC. 
+Se han solventado problemas diversos, con la camara web. Aún hay problemas.
+
+Para la próxima semana se utilizará el ejemplo de Muaz Khan
+
+
+
+
+
 - Domingo 10/11/2013
 
 Hemos hecho un poco de repaso de www.codecademy.com. 
