@@ -1,0 +1,42 @@
+
+body {
+ 	background-image: url("textura.jpg");
+	width: 1980;
+    	height: 1080;
+
+}
+
+h1{
+    color: white;
+    text-shadow: 3px 3px 3px grey;
+    text-decoration-line: underline;
+    font-size: 100px; 
+    text-align: center;
+}
+#youtubeid{
+     width: 640px;
+    height: 390px;
+    border-width: 4px;
+    border-color: red;
+
+}
+#contenedor{
+    margin: 0 auto;
+    text-align: center;
+
+}
+#botoncrear{
+    width: 100px;
+    display: block;
+    color: blue;
+	text-shadow:3px 3px 3px grey;
+    margin: 0 auto;
+    text-align: center;
+
+}
+#videoiframe{
+    margin:0 auto;
+    width: 500px;
+    display: block;
+
+}
