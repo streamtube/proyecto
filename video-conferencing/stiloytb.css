@@ -2,7 +2,7 @@
 body {
  	background-image: url("textura.jpg");
 	width: 1980;
-    	height: 1080;
+    height: 1080;
 
 }
 
@@ -14,17 +14,17 @@ h1{
     text-align: center;
 }
 #youtubeid{
-     width: 640px;
-    height: 390px;
+     width: 600px;
+    height: 25px;
     border-width: 4px;
     border-color: red;
-
 }
+
 #contenedor{
     margin: 0 auto;
     text-align: center;
-
 }
+
 #botoncrear{
     width: 100px;
     display: block;
@@ -32,11 +32,24 @@ h1{
 	text-shadow:3px 3px 3px grey;
     margin: 0 auto;
     text-align: center;
-
 }
+
 #videoiframe{
     margin:0 auto;
-    width: 500px;
     display: block;
+    width: 450px;
+    height: 300px;
+}
 
+#conference {
+    margin:0 auto;
+    width: 590px;
+    display: block;
+}
+
+#ayuda {
+    width: 600px;
+    height: 100px;
+    display: block;
+    margin: auto;
 }
