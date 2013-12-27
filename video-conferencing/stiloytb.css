@@ -1,53 +1,50 @@
 
 body {
  	background-image: url("textura.jpg");
-	width: 1980;
-    height: 1080;
-
 }
 
 h1{
     color: white;
     text-shadow: 3px 3px 3px grey;
     text-decoration-line: underline;
-    font-size: 80px;
+    font-size: 30px;
     text-align: center;
 }
-#youtubeid{
-     width: 600px;
+
+input{
+    width: 300px;
     height: 25px;
-    border-width: 4px;
-    border-color: red;
+    border: 4px red;
 }
 
-#contenedor{
+article {
     margin: 0 auto;
     text-align: center;
 }
 
-#botoncrear{
-    width: 100px;
-    display: block;
-    color: blue;
-	text-shadow:3px 3px 3px grey;
-    margin: 0 auto;
+button {
+    background-color: #88CB7F;
+    border: 0 none;
+    box-shadow: 1px 2px 2px 0 #000000;
+    color: #0000FF;
+    height: 25px;
     text-align: center;
+    text-shadow: 3px 3px 3px #808080;
+    width: 60px;
 }
 
-#videoiframe{
+#contenedor {
+    margin-top: 10px;
+}
+
+#contenedor iframe {
     margin:0 auto;
-    display: block;
+    display: none;
     width: 450px;
     height: 300px;
 }
 
-#conference {
-    margin:0 auto;
-    width: 590px;
-    display: block;
-}
-
-#ayuda {
+#contenedor img {
     width: 600px;
     height: 100px;
     display: block;
