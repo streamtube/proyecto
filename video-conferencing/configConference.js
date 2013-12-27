@@ -91,20 +91,21 @@ $(document).ready(function() {
     };
 
     function setupNewRoomButtonClickHandler() {
-        btnSetupNewRoom.disabled = true;
-        document.getElementById('conference-name').disabled = true;
+        btnSetupNewRoom.style.display = "none";
+        var roomName = (document.getElementById('conference-name') || { }).value || 'Anonymous';
+        document.getElementById('conference-name').style.display = "none";
         captureUserMedia(function() {
             conferenceUI.createRoom({
-                roomName: (document.getElementById('conference-name') || { }).value || 'Anonymous'
+                roomName: roomName
             });
         });
     }
 
     function captureUserMedia(callback) {
         var video = document.createElement('video');
-        video.setAttribute('width', 300);
-        video.setAttribute('autoplay', true);
-        video.setAttribute('controls', true);
+        video.setAttribute('width', "300px");
+        video.setAttribute("autoplay", "true");
+        video.setAttribute('controls', "true");
         videosContainer.insertBefore(video, videosContainer.firstChild);
 
         getUserMedia({
@@ -113,7 +114,7 @@ $(document).ready(function() {
                 config.attachStream = stream;
                 callback && callback();
 
-                video.setAttribute('muted', true);
+                video.setAttribute('muted', "true");
                 scaleVideos();
             },
             onerror: function() {
@@ -126,7 +127,7 @@ $(document).ready(function() {
     var conferenceUI = conference(config);
 
     /* UI specific */
-    var videosContainer = document.getElementById('videos-container') || document.body;
+    var videosContainer = document.getElementById('experiment') || document.body;
     var btnSetupNewRoom = document.getElementById('setup-new-room');
     btnSetupNewRoom.disabled = false;
     document.getElementById('conference-name').disabled = false;
@@ -164,8 +165,8 @@ $(document).ready(function() {
             if (tempVideoWidth > maxVideoWidth)
                 maxVideoWidth = tempVideoWidth;
         }
-        for (var i = 0; i < length; i++) {
-            video = videos[i];
+        for (var j = 0; j < length; j++) {
+            video = videos[j];
             if (video)
                 video.width = maxVideoWidth - minus;
         }
