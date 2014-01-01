@@ -1,9 +1,14 @@
+body {
+    background-image: url("textura1.jpg");
+}
+
 #mensajes {
     text-align: center;
 }
 
 #title {
     text-align: center;
+    color: red;
 }
 
 #boton {
