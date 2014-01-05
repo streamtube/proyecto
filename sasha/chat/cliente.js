@@ -9,5 +9,7 @@ $(document).ready(function() {
 
     socket.on("mensaje", function(msg) {
         console.log("hemos recibido un mensaje", msg);
+        var mensajeReal = msg.msg;
+        $( "#mensajes" ).append(mensajeReal);
     });
 });
