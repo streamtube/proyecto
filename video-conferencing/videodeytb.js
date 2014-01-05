@@ -1,3 +1,18 @@
+//La variable player es el video de Youtube
+var player;
+
+function crearVideoDeYoutube() {
+    player = new YT.Player('contenedor', {
+        height: '390',
+        width: '640',
+        videoId: $("#youtubeid").val(),
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+        }
+    });
+}
+
 function onYouTubeIframeAPIReady() {
     console.log("API de youtube lista!")
 }
@@ -12,16 +27,7 @@ function onPlayerStateChange(event) {
 }
 
 $(document).ready(function() {
-    var player;
     $("#botoncrear").on("click",function () {
-        player = new YT.Player('contenedor', {
-            height: '390',
-            width: '640',
-            videoId: $("#youtubeid").val(),
-            events: {
-                'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange
-            }
-        });
+        crearVideoDeYoutube();
     });
 });
