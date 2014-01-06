@@ -2,7 +2,7 @@ $(document).ready(function() {
 
     var config = {
         openSocket: function(config) {
-            var SIGNALING_SERVER = location.origin + ':8081',
+            var SIGNALING_SERVER = location.origin + ':8081/',
                 defaultChannel = location.hash.substr(1) || 'video-conferencing-hangout';
 
             var channel = config.channel || defaultChannel;
@@ -62,15 +62,22 @@ $(document).ready(function() {
             if (typeof roomsList === 'undefined') roomsList = document.body;
 
             var tr = document.createElement('tr');
-            tr.innerHTML = '<td><strong>' + room.roomName + '</strong> shared a conferencing room with you!</td>' +
-                '<td><button class="join">Join</button></td>';
+            tr.innerHTML = '<td>La conferencia <strong>' + room.roomName + '</strong> está disponible</td>' +
+                '<td><button class="join">Unirse</button></td>';
             roomsList.insertBefore(tr, roomsList.firstChild);
 
             var joinRoomButton = tr.querySelector('.join');
             joinRoomButton.setAttribute('data-broadcaster', room.broadcaster);
             joinRoomButton.setAttribute('data-roomToken', room.roomToken);
+
+            var callbackOnRoomClosed = this.onRoomClosed;
+
             joinRoomButton.onclick = function() {
-                this.disabled = true;
+
+                callbackOnRoomClosed(room);
+
+                document.getElementById('conference-name').style.display = "none";
+                btnSetupNewRoom.style.display = "none";
 
                 var broadcaster = this.getAttribute('data-broadcaster');
                 var roomToken = this.getAttribute('data-roomToken');
