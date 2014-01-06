@@ -39,6 +39,14 @@ var conference = function(config) {
         if(response.left && config.onRoomClosed) {
             config.onRoomClosed(response);
         }
+
+        if(response.videoPaused) {
+            config.onVideoPaused(response);
+        }
+
+        if(response.videoStarted) {
+            config.onVideoStarted(response);
+        }
     }
 
     function openSubSocket(_config) {

@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    var config = {
+    config = {
         openSocket: function(config) {
             var SIGNALING_SERVER = location.origin + ':8081/',
                 defaultChannel = location.hash.substr(1) || 'video-conferencing-hangout';
@@ -94,6 +94,28 @@ $(document).ready(function() {
             if(joinButton) {
                 joinButton.parentNode.parentNode.parentNode.parentNode.removeChild(joinButton.parentNode.parentNode.parentNode);
             }
+        },
+
+        sendVideoPaused: function(info) {
+            var datos = {videoPaused: true, info: info};
+            //Enviar mensaje al servidor
+            //Enviar mensaje utilizando la variable socket
+
+        },
+        sendVideoStarted: function(info) {
+            var datos = {videoStarted: true, info: info};
+            //Enviar datos al servidor
+            //Enviar datos utilizando la variable socket
+
+        },
+
+        onVideoPaused: function(response) {
+            //Mensaje recibido desde el servidor de que se ha pausado el video
+            onVideoPaused(response.info);
+        },
+        onVideoStarted: function(response) {
+            //Mensaje recibido desde el servidor de que se ha reproducido el video
+            onVideoStarted(response.info);
         }
     };
 
