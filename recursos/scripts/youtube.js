@@ -45,20 +45,19 @@ function onPlayerStateChange(event) {
 /**
  * Esta funcion se llama cuando el servidor nos avisa de que
  * alguien de la conferencia ha pausado o reproducido el video
- * @param response
  */
 function onVideoMessage(response) {
     loHeHechoYo = false;
 
     if(response.videoPaused) {
         console.log("Alguien ha pausado el video");
-        //TODO: Escribir codigo para pausar el video
+        //TODO: Escribir codigo para pausar el video (ALEX)
 
     }
 
     if(response.videoStarted) {
         console.log("Alguien ha comenzado el video");
-        //TODO: Escribir codigo para reproducir el video
+        //TODO: Escribir codigo para reproducir el video (GUILLEM)
 
     }
 }
@@ -70,11 +69,11 @@ function onVideoMessage(response) {
 var conferenceUI;
 
 function sendVideoPaused(info) {
-    //TODO: Escribir codigo para enviar al servidor que el video ha sido pausado
+    //TODO: Escribir codigo para enviar al servidor que el video ha sido pausado (SASHA)
 
 }
 function sendVideoStarted(info) {
-    //TODO: Escribir codigo para enviar al servidor que el video ha sido reproducido
+    //TODO: Escribir codigo para enviar al servidor que el video ha sido reproducido (JAVI)
 
 }
 
@@ -83,7 +82,7 @@ $(document).ready(function() {
     $("#botoncrear").on("click",function () {
         var videoID = $("#youtubeid").val();
         crearVideoDeYoutube(videoID);
-        //TODO: Escribir codigo para enviar al servidor que el video ha sido creado
+        //TODO: Escribir codigo para enviar al servidor que el video ha sido creado (TOMAS)
 
     });
 });
