@@ -43,6 +43,11 @@ function onNewNamespace(channel, sender) {
             if (data.sender == sender)
                 socket.broadcast.emit('message', data.data);
         });
+
+        socket.on('youtube', function(data) {
+            console.log("Reenviando mensaje "+data+" de youtube a "+channel);
+            socket.broadcast.emit('youtube', data);
+        });
     });
 }
 
