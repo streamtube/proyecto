@@ -1,7 +1,11 @@
-
-body {
- 	background-image: url("textura.jpg");
+body{
+    background-image:url('fondodefinitivo.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: black;
 }
+
+
 
 h1{
     color: white;
