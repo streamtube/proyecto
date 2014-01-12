@@ -39,21 +39,15 @@ var conference = function(config) {
         if(response.left && config.onRoomClosed) {
             config.onRoomClosed(response);
         }
-
-        if(response.videoPaused) {
-            config.onVideoPaused(response);
-        }
-
-        if(response.videoStarted) {
-            config.onVideoStarted(response);
-        }
     }
 
     function openSubSocket(_config) {
         if (!_config.channel) return;
+        console.log("openSubSocket", _config.channel);
         var socketConfig = {
             channel: _config.channel,
             onmessage: socketResponse,
+            onyoutube: socketOnYoutube,
             onopen: function() {
                 if (isofferer && !peer) initPeer();
                 sockets[sockets.length] = socket;
@@ -161,6 +155,10 @@ var conference = function(config) {
             }
         }
 
+        function socketOnYoutube(response) {
+            config.onVideoMessage(response);
+        }
+
         var invokedOnce = false;
 
         function selfInvoker() {
@@ -266,6 +264,22 @@ var conference = function(config) {
                 joinUser: _config.joinUser
             });
         },
-		leaveRoom: leave
+
+        getSocket: function() {
+            return {
+                emit: function(name, data) {
+                    var length = sockets.length;
+                    for (var i = 0; i < length; i++) {
+                        var socket = sockets[i];
+                        if (socket) {
+                            console.log("Socket emit youtube");
+                            socket.emit(name, data);
+                        }
+                    }
+                }
+            }
+        },
+
+        leaveRoom: leave
     };
 };

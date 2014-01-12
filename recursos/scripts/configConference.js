@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    config = {
+    var config = {
         openSocket: function(config) {
             var SIGNALING_SERVER = location.origin + ':8081/',
                 defaultChannel = location.hash.substr(1) || 'video-conferencing-hangout';
@@ -27,6 +27,7 @@ $(document).ready(function() {
             };
 
             socket.on('message', config.onmessage);
+            socket.on("youtube", config.onyoutube);
         },
         onRemoteStream: function(media) {
             var video = media.video;
@@ -96,26 +97,8 @@ $(document).ready(function() {
             }
         },
 
-        sendVideoPaused: function(info) {
-            var datos = {videoPaused: true, info: info};
-            //Enviar mensaje al servidor
-            //Enviar mensaje utilizando la variable socket
-
-        },
-        sendVideoStarted: function(info) {
-            var datos = {videoStarted: true, info: info};
-            //Enviar datos al servidor
-            //Enviar datos utilizando la variable socket
-
-        },
-
-        onVideoPaused: function(response) {
-            //Mensaje recibido desde el servidor de que se ha pausado el video
-            onVideoPaused(response.info);
-        },
-        onVideoStarted: function(response) {
-            //Mensaje recibido desde el servidor de que se ha reproducido el video
-            onVideoStarted(response.info);
+        onVideoMessage: function(response) {
+            onVideoMessage(response);
         }
     };
 
@@ -153,7 +136,7 @@ $(document).ready(function() {
         });
     }
 
-    var conferenceUI = conference(config);
+    conferenceUI = conference(config);
 
     /* UI specific */
     var videosContainer = document.getElementById('experiment') || document.body;

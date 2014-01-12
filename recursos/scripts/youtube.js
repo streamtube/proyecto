@@ -1,15 +1,14 @@
 //La variable player es el video de Youtube
 var player;
 
-//La variable config es la que se usa en configConference.js
-var config;
+var loHeHechoYo = true;
 
-function crearVideoDeYoutube() {
+function crearVideoDeYoutube(id) {
     player = new YT.Player('contenedor', {
         height: '390',
         width: '640',
         origin: 'http',
-        videoId: $("#youtubeid").val(),
+        videoId: id,
         events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange
@@ -23,40 +22,68 @@ function onYouTubeIframeAPIReady() {
 
 function onPlayerReady(event) {
     console.log("El video está listo!");
-    event.target.playVideo();
 }
 
 function onPlayerStateChange(event) {
-    //¿Como podemos ver si el cambio ha sido producido por el usuario local o otro usuario de la conferencia?
-    console.log("Alguien ha cambiado el estado del video", event);
     var idEvento = event.data;
 
+    if(loHeHechoYo == false) {
+        loHeHechoYo = true;
+        return;
+    }
+
     if(idEvento === YT.PlayerState.PLAYING) {
-        console.log("Alguien ha reproducido el video");
+        console.log("Tu has reproducido el video");
         sendVideoStarted(event.target);
     }
     else if(idEvento === YT.PlayerState.PAUSED) {
-        console.log("Alguien ha pausado el video");
+        console.log("Tu has pausado el video");
         sendVideoPaused(event.target);
     }
 }
 
+/**
+ * Esta funcion se llama cuando el servidor nos avisa de que
+ * alguien de la conferencia ha pausado o reproducido el video
+ * @param response
+ */
+function onVideoMessage(response) {
+    loHeHechoYo = false;
+
+    if(response.videoPaused) {
+        console.log("Alguien ha pausado el video");
+        //TODO: Escribir codigo para pausar el video
+
+    }
+
+    if(response.videoStarted) {
+        console.log("Alguien ha comenzado el video");
+        //TODO: Escribir codigo para reproducir el video
+
+    }
+}
+
+
+//La variable conferenceUI contiene todas las funciones que estan en conference.js
+//La funcion más importante es getSocket que obtiene el socket para llamar al servidor
+// var socket = conferenceUI.getSocket();
+var conferenceUI;
+
 function sendVideoPaused(info) {
-    config.sendVideoPaused(info);
+    //TODO: Escribir codigo para enviar al servidor que el video ha sido pausado
+
 }
 function sendVideoStarted(info) {
-    config.sendVideoStarted(info);
-}
-function onVideoPaused(info) {
-    //El servidor nos notifica que el video se ha pausado
-}
-function onVideoStarted(info) {
-    //El servidor nos notifica que el video se ha reproducido
+    //TODO: Escribir codigo para enviar al servidor que el video ha sido reproducido
+
 }
 
 
 $(document).ready(function() {
     $("#botoncrear").on("click",function () {
-        crearVideoDeYoutube();
+        var videoID = $("#youtubeid").val();
+        crearVideoDeYoutube(videoID);
+        //TODO: Escribir codigo para enviar al servidor que el video ha sido creado
+
     });
 });
