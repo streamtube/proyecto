@@ -60,6 +60,11 @@ function onVideoMessage(response) {
         //TODO: Escribir codigo para reproducir el video (GUILLEM)
 
     }
+
+    if(response.videoId) {
+        console.log("Otro usuario ha cargado un video!");
+        crearVideoDeYoutube(response.videoId);
+    }
 }
 
 
@@ -82,7 +87,8 @@ $(document).ready(function() {
     $("#botoncrear").on("click",function () {
         var videoID = $("#youtubeid").val();
         crearVideoDeYoutube(videoID);
-        //TODO: Escribir codigo para enviar al servidor que el video ha sido creado (TOMAS)
-
+        var socket = conferenceUI.getSocket();
+        var datos = { videoId: videoID, videoPaused: false, videoStarted: false };
+        socket.emit("youtube", datos);
     });
 });

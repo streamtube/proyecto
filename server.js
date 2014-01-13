@@ -45,7 +45,8 @@ function onNewNamespace(channel, sender) {
         });
 
         socket.on('youtube', function(data) {
-            console.log("Reenviando mensaje "+data+" de youtube a "+channel);
+            console.log("Reenviando mensaje de youtube a "+channel);
+            console.log(data);
             socket.broadcast.emit('youtube', data);
         });
     });
