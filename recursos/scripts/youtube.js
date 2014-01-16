@@ -97,7 +97,7 @@ $(document).ready(function() {
         var videoID = $("#youtubeid").val();
         crearVideoDeYoutube(videoID);
         var socket = conferenceUI.getSocket();
-        var datos = { videoId: videoID, videoPaused: false, videoStarted: true };
+        var datos = { videoId: videoID, videoPaused: false, videoStarted: false };
         socket.emit("youtube", datos);
     });
 });
