@@ -1,19 +1,29 @@
+// 2. This code loads the IFrame Player API code asynchronously.
+var tag = document.createElement('script');
+
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+
 //La variable player es el video de Youtube
 var player;
 
-var loHeHechoYo = true;
+var nivelDeBloqueo = 0;
 
 function crearVideoDeYoutube(id) {
-    player = new YT.Player('contenedor', {
-        height: '390',
-        width: '640',
-        origin: 'http',
-        videoId: id,
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-        }
-    });
+    if(!player) {
+        player = new YT.Player('video-youtube', {
+            height: '390',
+            width: '640',
+            origin: 'http',
+            videoId: id,
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
 }
 
 function onYouTubeIframeAPIReady() {
@@ -27,8 +37,10 @@ function onPlayerReady(event) {
 function onPlayerStateChange(event) {
     var idEvento = event.data;
 
-    if(loHeHechoYo == false) {
-        loHeHechoYo = true;
+    nivelDeBloqueo = nivelDeBloqueo - 1;
+    if(nivelDeBloqueo > 0) {
+        console.log("La última acción no la has hecho tú. No se re-enviarán las acciones al servidor");
+        console.log("Nivel De Bloqueo: ", nivelDeBloqueo);
         return;
     }
 
@@ -47,22 +59,22 @@ function onPlayerStateChange(event) {
  * alguien de la conferencia ha pausado o reproducido el video
  */
 function onVideoMessage(response) {
-    loHeHechoYo = false;
-
     if(response.videoPaused) {
+        nivelDeBloqueo = 2;
+        console.log("Alguien ha pausado el video");
         player.seekTo(response.segundos);
         player.pauseVideo();
-        console.log("Alguien ha pausado el video");
-
     }
+
     if(response.videoStarted) {
+        nivelDeBloqueo = 2;
+        console.log("Alguien ha comenzado el video");
         player.seekTo(response.segundos);
         player.playVideo();
-        console.log("Alguien ha comenzado el video");
-        }
-
+    }
 
     if(response.videoId) {
+        nivelDeBloqueo = 1;
         console.log("Otro usuario ha cargado un video!");
         crearVideoDeYoutube(response.videoId);
     }
@@ -75,22 +87,18 @@ function onVideoMessage(response) {
 var conferenceUI;
 
 function sendVideoPaused(info) {
-        var socket = conferenceUI.getSocket();
-        var pausa = { segundos: player.getCurrentTime(), videoPaused: true, videoStarted: false };
-        socket.emit("youtube", pausa);
-        console.log("funciona");
-    }
-
-
-
-function sendVideoStarted(info) {
-        var socket = conferenceUI.getSocket();
-        var hasa = { segundos: player.getCurrentTime(), videoPaused: false, videoStarted: true };
-        socket.emit("youtube", hasa);
-        console.log("eres gay");
-
+    var socket = conferenceUI.getSocket();
+    var pausa = { segundos: player.getCurrentTime(), videoPaused: true, videoStarted: false };
+    socket.emit("youtube", pausa);
+    console.log("funciona");
 }
 
+function sendVideoStarted(info) {
+    var socket = conferenceUI.getSocket();
+    var hasa = { segundos: player.getCurrentTime(), videoPaused: false, videoStarted: true };
+    socket.emit("youtube", hasa);
+    console.log("eres gay");
+}
 
 $(document).ready(function() {
     $("#botoncrear").on("click",function () {

@@ -2,7 +2,7 @@ var server  = require('http').createServer(),
     sio      = require('socket.io'),
     port    = 8081;
 server.listen(port);
-var io = sio.listen(server, { log:true });
+var io = sio.listen(server, { log:false });
 
 var channels = {};
 
