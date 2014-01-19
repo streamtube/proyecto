@@ -167,7 +167,7 @@ var conference = function(config) {
             invokedOnce = true;
 
             if (isofferer) peer.addAnswerSDP(inner.sdp);
-            else initPeer(inner.sdp);
+            else initPeer(inner.sdp);conferenceUI.getSocket
         }
     }
 
