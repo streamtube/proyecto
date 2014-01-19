@@ -53,7 +53,6 @@ function onVideoMessage(response) {
         player.seekTo(response.segundos);
         player.pauseVideo();
         console.log("Alguien ha pausado el video");
-        //TODO: Escribir codigo para pausar el video (ALEX)
 
     }
     if(response.videoStarted) {
@@ -81,7 +80,6 @@ function sendVideoPaused(info) {
         socket.emit("youtube", pausa);
         console.log("funciona");
     }
-    //TODO: Escribir codigo para enviar al servidor que el video ha sido pausado (SASHA)
 
 
 
