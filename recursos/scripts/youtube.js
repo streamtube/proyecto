@@ -57,9 +57,8 @@ function onVideoMessage(response) {
     if(response.videoStarted) {
         console.log("Alguien ha comenzado el video");
         //TODO: Escribir codigo para reproducir el video (GUILLEM)
+        }
 
-
-    }
 
     if(response.videoId) {
         console.log("Otro usuario ha cargado un video!");
@@ -79,17 +78,24 @@ function sendVideoPaused(info) {
 }
 function sendVideoStarted(info) {
     //TODO: Escribir codigo para enviar al servidor que el video ha sido reproducido (JAVI)
+    $("#botoncrear").on("click",function () {
+        var videoID = $("#youtubeid").val();
+        sendVideoStarted(videoID);
+        var socket = conferenceUI.getSocket();
+        var datas = { videoId: videoID, videoPaused: false, videoStarted: true };
+        socket.emit("youtube", datas);
+        console.log("eres gay");
+    });
 
 }
 
 
 $(document).ready(function() {
-        $("#botoncrear").on("click",function () {
+    $("#botoncrear").on("click",function () {
         var videoID = $("#youtubeid").val();
         crearVideoDeYoutube(videoID);
         var socket = conferenceUI.getSocket();
         var datos = { videoId: videoID, videoPaused: false, videoStarted: true };
-        socket.emit("youtube", datos)
+        socket.emit("youtube", datos);
     });
-
 });
