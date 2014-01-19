@@ -74,9 +74,6 @@ function onVideoMessage(response) {
 var conferenceUI;
 
 function sendVideoPaused(info) {
-    $("#botoncrear").on("click",function () {
-        var videoID = $("#youtubeid").val();
-        sendVideoStarted(videoID);
         var socket = conferenceUI.getSocket();
         var pausa = { segundos: player.getCurrentTime(), videoId: videoID, videoPaused: true, videoStarted: false };
         socket.emit("youtube", pausa);
