@@ -85,16 +85,13 @@ function sendVideoPaused(info) {
     });
     //TODO: Escribir codigo para enviar al servidor que el video ha sido pausado (SASHA)
 
+
 }
 function sendVideoStarted(info) {
-    $("#botoncrear").on("click",function () {
-        var videoID = $("#youtubeid").val();
-        sendVideoStarted(videoID);
         var socket = conferenceUI.getSocket();
-        var hasa = { segundos: player.getCurrentTime(), videoId: videoID, videoPaused: false, videoStarted: true };
+        var hasa = { segundos: player.getCurrentTime(), videoPaused: false, videoStarted: true };
         socket.emit("youtube", hasa);
         console.log("eres gay");
-    });
 
 }
 
