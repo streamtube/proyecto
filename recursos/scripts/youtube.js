@@ -85,6 +85,7 @@ function sendVideoStarted(info) {
         var socket = conferenceUI.getSocket();
         var datas = { videoId: videoID, videoPaused: false, videoStarted: true };
         socket.emit("youtube", datas);
+        console.log("eres gay");
     });
 
 }
