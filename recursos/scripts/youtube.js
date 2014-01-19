@@ -54,10 +54,12 @@ function onVideoMessage(response) {
         //TODO: Escribir codigo para pausar el video (ALEX)
 
     }
-
+    $(document).ready(function() {
     if(response.videoStarted) {
         console.log("Alguien ha comenzado el video");
+        $(document).ready(function() {
         //TODO: Escribir codigo para reproducir el video (GUILLEM)
+
 
     }
 
@@ -96,7 +98,17 @@ $(document).ready(function() {
         var videoID = $("#youtubeid").val();
         crearVideoDeYoutube(videoID);
         var socket = conferenceUI.getSocket();
-        var datos = { videoId: videoID, videoPaused: false, videoStarted: false };
+        var datos = { videoId: videoID, videoPaused: false, videoStarted: true };
         socket.emit("youtube", datos);
+    });
+    $(document).ready(function() {
+        $("#botoncrear").on("click",function () {
+            var videoID = $("#youtubeid").val();
+            sendVideoStarted(videoID);
+            var socket = conferenceUI.getSocket();
+            var datos = { videoId: videoID, videoPaused: false, videoStarted: true };
+            socket.emit("youtube", datos);
+    }
+
     });
 });
