@@ -55,6 +55,8 @@ function onVideoMessage(response) {
 
     }
     if(response.videoStarted) {
+        player.playVideo();
+        player.seekTo(response.segundos);
         console.log("Alguien ha comenzado el video");
         //TODO: Escribir codigo para reproducir el video (GUILLEM)
         }
