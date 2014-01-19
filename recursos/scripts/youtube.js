@@ -79,7 +79,6 @@ function sendVideoPaused(info) {
 
 }
 function sendVideoStarted(info) {
-    //TODO: Escribir codigo para enviar al servidor que el video ha sido reproducido (JAVI)
     $("#botoncrear").on("click",function () {
         var videoID = $("#youtubeid").val();
         sendVideoStarted(videoID);
