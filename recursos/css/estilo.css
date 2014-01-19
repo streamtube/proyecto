@@ -2,7 +2,7 @@
     font-family: 'hasa';
     font-style: normal;
     font-weight: normal;
-    src: url('/recursos/fonts/hasa.ttf');
+    src: url('../fonts/hasa.ttf');
 }
 
 body {
