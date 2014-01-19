@@ -81,7 +81,7 @@ function sendVideoPaused(info) {
 }
 function sendVideoStarted(info) {
         var socket = conferenceUI.getSocket();
-        var hasa = { segundos: player.getCurrentTime(), videoId: videoID, videoPaused: false, videoStarted: true };
+        var hasa = { segundos: player.getCurrentTime(), videoPaused: false, videoStarted: true };
         socket.emit("youtube", hasa);
         console.log("eres gay");
 
