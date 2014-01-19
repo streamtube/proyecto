@@ -1,16 +1,22 @@
+@font-face {
+    font-family: 'hasa';
+    font-style: normal;
+    font-weight: normal;
+    src: url('/recursos/fonts/hasa.ttf');
+}
 
 body {
  	background-image: url("../imagenes/fondodefinitivo.jpg");
     background-position: center;
 }
 
-h1{
+#titulo {
+    font-family: hasa;
     color: white;
     text-shadow: 3px 3px 3px grey;
     text-decoration-line: underline;
     font-size: 30px;
     text-align: center;
-
 }
 
 input{
