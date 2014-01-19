@@ -75,6 +75,7 @@ var conferenceUI;
 function sendVideoPaused(info) {
     //TODO: Escribir codigo para enviar al servidor que el video ha sido pausado (SASHA)
 
+
 }
 function sendVideoStarted(info) {
     $("#botoncrear").on("click",function () {
