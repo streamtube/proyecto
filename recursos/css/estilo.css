@@ -58,3 +58,7 @@ button {
     display: block;
     margin: auto;
 }
+
+#video-youtube {
+    margin: 0 auto;
+}

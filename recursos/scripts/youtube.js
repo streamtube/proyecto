@@ -11,6 +11,8 @@ var player;
 
 var nivelDeBloqueo = 0;
 
+var ultimaAccion;
+
 function crearVideoDeYoutube(id) {
     if(!player) {
         player = new YT.Player('video-youtube', {
@@ -44,12 +46,14 @@ function onPlayerStateChange(event) {
         return;
     }
 
-    if(idEvento === YT.PlayerState.PLAYING) {
+    if(idEvento === YT.PlayerState.PLAYING && ultimaAccion !== YT.PlayerState.PLAYING) {
         console.log("Tu has reproducido el video");
+        ultimaAccion = YT.PlayerState.PLAYING;
         sendVideoStarted(event.target);
     }
-    else if(idEvento === YT.PlayerState.PAUSED) {
+    else if(idEvento === YT.PlayerState.PAUSED && ultimaAccion !== YT.PlayerState.PAUSED) {
         console.log("Tu has pausado el video");
+        ultimaAccion = YT.PlayerState.PAUSED;
         sendVideoPaused(event.target);
     }
 }
@@ -60,14 +64,14 @@ function onPlayerStateChange(event) {
  */
 function onVideoMessage(response) {
     if(response.videoPaused) {
-        nivelDeBloqueo = 2;
+        nivelDeBloqueo = 1;
         console.log("Alguien ha pausado el video");
         player.seekTo(response.segundos);
         player.pauseVideo();
     }
 
     if(response.videoStarted) {
-        nivelDeBloqueo = 2;
+        nivelDeBloqueo = 1;
         console.log("Alguien ha comenzado el video");
         player.seekTo(response.segundos);
         player.playVideo();

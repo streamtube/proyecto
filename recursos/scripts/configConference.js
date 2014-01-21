@@ -2,32 +2,25 @@ $(document).ready(function() {
 
     var config = {
         openSocket: function(config) {
-            var SIGNALING_SERVER = location.origin + ':8081/',
-                defaultChannel = location.hash.substr(1) || 'video-conferencing-hangout';
 
-            var channel = config.channel || defaultChannel;
-            var sender = Math.round(Math.random() * 999999999) + 999999999;
-
-            io.connect(SIGNALING_SERVER).emit('new-channel', {
-                channel: channel,
-                sender: sender
-            });
-
-            var socket = io.connect(SIGNALING_SERVER + channel);
+            var channel = config.channel || location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
+            var socket = new Firebase('https://streamtube.firebaseio.com/' + channel);
             socket.channel = channel;
-            socket.on('connect', function() {
-                if (config.callback) config.callback(socket);
+            socket.on('child_added', function (data) {
+                var value = data.val();
+                if(value.youtube) {
+                    onVideoMessage(value);
+                }
+                else {
+                    config.onmessage(value);
+                }
             });
-
-            socket.send = function(message) {
-                socket.emit('message', {
-                    sender: sender,
-                    data: message
-                });
+            socket.send = function (data) {
+                this.push(data);
             };
-
-            socket.on('message', config.onmessage);
-            socket.on("youtube", config.onyoutube);
+            config.onopen && setTimeout(config.onopen, 1);
+            socket.onDisconnect().remove();
+            return socket;
         },
         onRemoteStream: function(media) {
             var video = media.video;

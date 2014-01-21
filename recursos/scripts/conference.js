@@ -132,6 +132,8 @@ var conference = function(config) {
         }
 
         function socketResponse(response) {
+            console.log("socketResponse", response);
+
             if (response.userToken == self.userToken) return;
             if (response.sdp) {
                 inner.sdp = JSON.parse(response.sdp);
@@ -273,7 +275,8 @@ var conference = function(config) {
                         var socket = sockets[i];
                         if (socket) {
                             console.log("Socket emit youtube");
-                            socket.emit(name, data);
+                            data.youtube = true;
+                            socket.send(data);
                         }
                     }
                 }
