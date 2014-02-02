@@ -3,7 +3,7 @@ $(document).ready(function() {
     var config = {
         openSocket: function(config) {
 
-            var channel = config.channel || location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
+            var channel = config.channel || "publico";
             var socket = new Firebase('https://streamtube.firebaseio.com/' + channel);
             socket.channel = channel;
             socket.on('child_added', function (data) {
