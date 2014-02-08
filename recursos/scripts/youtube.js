@@ -27,7 +27,7 @@ function crearVideoDeYoutube(id) {
                 'onStateChange': onPlayerStateChange
             }
         });
-        videoIdActual = videoIdActual;
+        videoIdActual = id;
     }
 }
 

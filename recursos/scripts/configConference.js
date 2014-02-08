@@ -64,6 +64,7 @@ $(document).ready(function() {
             joinRoomButton.setAttribute('data-broadcaster', room.broadcaster);
             joinRoomButton.setAttribute('data-roomToken', room.roomToken);
             joinRoomButton.setAttribute('data-ultimomensaje', room.mensaje);
+            console.log(room.mensaje);
 
             var callbackOnRoomClosed = this.onRoomClosed;
 

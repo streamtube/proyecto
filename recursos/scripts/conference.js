@@ -215,7 +215,7 @@ var conference = function(config) {
             roomToken: self.roomToken,
             roomName: self.roomName,
             broadcaster: self.userToken,
-            mensaje: ultimoMensajeRecibido
+            mensaje: JSON.stringify(ultimoMensajeRecibido)
         });
         setTimeout(startBroadcasting, 3000);
     }
@@ -281,6 +281,7 @@ var conference = function(config) {
                         if (socket) {
                             console.log("Socket emit youtube");
                             data.youtube = true;
+                            ultimoMensajeRecibido = data;
                             socket.send(data);
                         }
                     }
