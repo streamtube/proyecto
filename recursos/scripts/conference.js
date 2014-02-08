@@ -10,6 +10,7 @@ var conference = function(config) {
     var isGetNewRoom = true;
     var sockets = [];
     var defaultSocket = { };
+    var old = player.getVideoUrl();
 
     function openDefaultSocket() {
         defaultSocket = config.openSocket({
@@ -206,8 +207,10 @@ var conference = function(config) {
         if (e.keyCode == 116) leave();
     };
 
+
+
     function startBroadcasting() {
-        defaultSocket && defaultSocket.send({
+            defaultSocket && defaultSocket.send({
             roomToken: self.roomToken,
             roomName: self.roomName,
             broadcaster: self.userToken

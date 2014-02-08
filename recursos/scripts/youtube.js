@@ -67,6 +67,7 @@ function onVideoMessage(response) {
         nivelDeBloqueo = 1;
         console.log("Alguien ha pausado el video");
         player.seekTo(response.segundos);
+        player.getVideoUrl();
         player.pauseVideo();
     }
 
@@ -74,6 +75,7 @@ function onVideoMessage(response) {
         nivelDeBloqueo = 1;
         console.log("Alguien ha comenzado el video");
         player.seekTo(response.segundos);
+        player.getVideoUrl();
         player.playVideo();
     }
 
