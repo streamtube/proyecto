@@ -10,7 +10,7 @@ var conference = function(config) {
     var isGetNewRoom = true;
     var sockets = [];
     var defaultSocket = { };
-    var old = player.getVideoUrl();
+    var ultimoMensajeRecibido = null;
 
     function openDefaultSocket() {
         defaultSocket = config.openSocket({
@@ -160,6 +160,7 @@ var conference = function(config) {
 
         function socketOnYoutube(response) {
             config.onVideoMessage(response);
+            ultimoMensajeRecibido = response;
         }
 
         var invokedOnce = false;
@@ -213,7 +214,8 @@ var conference = function(config) {
             defaultSocket && defaultSocket.send({
             roomToken: self.roomToken,
             roomName: self.roomName,
-            broadcaster: self.userToken
+            broadcaster: self.userToken,
+            mensaje: ultimoMensajeRecibido
         });
         setTimeout(startBroadcasting, 3000);
     }
