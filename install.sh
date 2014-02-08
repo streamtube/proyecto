@@ -108,6 +108,7 @@ if [ ! -d "proyecto" ]; then
     read -p "¿Cúal es tu nombre de usuario en github? Si no te acuerdas no pongas nada: " username;
     if [ ! -z "$username" -a "$username" != " " ]; then
         git config --global user.name ${username};
+        git config remote.origin.url https://${username}@github.com/streamtube/proyecto.git
     else
         echo "Cuando te acuerdes ejecuta git config --global user.name tuNombreDeUsuario";
     fi
