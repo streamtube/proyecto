@@ -92,7 +92,7 @@ $(document).ready(function() {
         onRoomClosed: function(room) {
             var joinButton = document.querySelector('button[data-roomToken="'+ room.roomToken +'"]');
             if(joinButton) {
-                joinButton.parentNode.parentNode.parentNode.parentNode.removeChild(joinButton.parentNode.parentNode.parentNode);
+                joinButton.parentNode.parentNode.removeChild(joinButton.parentNode);
             }
         },
 
