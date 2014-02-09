@@ -9,6 +9,8 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 //La variable player es el video de Youtube
 var player;
 
+var videoIdActual;
+
 var nivelDeBloqueo = 0;
 
 var ultimaAccion;
@@ -25,6 +27,7 @@ function crearVideoDeYoutube(id) {
                 'onStateChange': onPlayerStateChange
             }
         });
+        videoIdActual = id;
     }
 }
 
@@ -63,6 +66,12 @@ function onPlayerStateChange(event) {
  * alguien de la conferencia ha pausado o reproducido el video
  */
 function onVideoMessage(response) {
+    if(response.videoId !== videoIdActual) {
+        nivelDeBloqueo = 1;
+        console.log("Otro usuario ha cargado un video!");
+        crearVideoDeYoutube(response.videoId);
+    }
+
     if(response.videoPaused) {
         nivelDeBloqueo = 1;
         console.log("Alguien ha pausado el video");
@@ -76,12 +85,6 @@ function onVideoMessage(response) {
         player.seekTo(response.segundos);
         player.playVideo();
     }
-
-    if(response.videoId) {
-        nivelDeBloqueo = 1;
-        console.log("Otro usuario ha cargado un video!");
-        crearVideoDeYoutube(response.videoId);
-    }
 }
 
 
@@ -92,14 +95,14 @@ var conferenceUI;
 
 function sendVideoPaused(info) {
     var socket = conferenceUI.getSocket();
-    var pausa = { segundos: player.getCurrentTime(), videoPaused: true, videoStarted: false };
+    var pausa = { segundos: player.getCurrentTime(), videoPaused: true, videoStarted: false, videoId: videoIdActual };
     socket.emit("youtube", pausa);
     console.log("funciona");
 }
 
 function sendVideoStarted(info) {
     var socket = conferenceUI.getSocket();
-    var hasa = { segundos: player.getCurrentTime(), videoPaused: false, videoStarted: true };
+    var hasa = { segundos: player.getCurrentTime(), videoPaused: false, videoStarted: true, videoId: videoIdActual };
     socket.emit("youtube", hasa);
     console.log("eres gay");
 }
@@ -111,5 +114,9 @@ $(document).ready(function() {
         var socket = conferenceUI.getSocket();
         var datos = { videoId: videoID, videoPaused: false, videoStarted: false };
         socket.emit("youtube", datos);
+        function goBack()
+        {
+            window.history.go(document.createElement)
+        }
     });
 });

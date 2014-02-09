@@ -1,6 +1,7 @@
 -----Proyecto StreamTube
 ---------
 - Domingo 9/02/2014
+Verificación y solución de bugs.
 
 
 
