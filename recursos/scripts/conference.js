@@ -131,8 +131,6 @@ var conference = function(config) {
         }
 
         function socketResponse(response) {
-            console.log("socketResponse", response);
-
             if (response.userToken == self.userToken) return;
             if (response.sdp) {
                 inner.sdp = JSON.parse(response.sdp);
