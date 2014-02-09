@@ -10,13 +10,16 @@ body {
     background-position: center;
 }
 
+.centrado {
+    text-align: center;
+}
+
 #titulo {
     font-family: hasa;
     color: white;
     text-shadow: 3px 3px 3px grey;
     text-decoration-line: underline;
     font-size: 30px;
-    text-align: center;
 }
 
 input{
