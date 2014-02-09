@@ -12,6 +12,7 @@ body {
 
 .centrado {
     text-align: center;
+    display: block;
 }
 
 #titulo {
