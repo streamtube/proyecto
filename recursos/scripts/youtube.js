@@ -114,5 +114,9 @@ $(document).ready(function() {
         var socket = conferenceUI.getSocket();
         var datos = { videoId: videoID, videoPaused: false, videoStarted: false };
         socket.emit("youtube", datos);
+        function goBack()
+        {
+            window.history.go(document.createElement)
+        }
     });
 });
