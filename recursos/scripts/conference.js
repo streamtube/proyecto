@@ -10,8 +10,6 @@ var conference = function(config) {
     var isGetNewRoom = true;
     var sockets = [];
     var defaultSocket = { };
-    var ultimoMensajeRecibido = null;
-
     function openDefaultSocket() {
         defaultSocket = config.openSocket({
             onmessage: onDefaultSocketResponse,
@@ -160,7 +158,7 @@ var conference = function(config) {
 
         function socketOnYoutube(response) {
             config.onVideoMessage(response);
-            ultimoMensajeRecibido = response;
+            self.ultimoMensajeRecibido = response;
         }
 
         var invokedOnce = false;
@@ -215,7 +213,7 @@ var conference = function(config) {
             roomToken: self.roomToken,
             roomName: self.roomName,
             broadcaster: self.userToken,
-            mensaje: JSON.stringify(ultimoMensajeRecibido)
+            mensaje: self.ultimoMensajeRecibido || ""
         });
         setTimeout(startBroadcasting, 3000);
     }
@@ -281,7 +279,7 @@ var conference = function(config) {
                         if (socket) {
                             console.log("Socket emit youtube");
                             data.youtube = true;
-                            ultimoMensajeRecibido = data;
+                            self.ultimoMensajeRecibido = data;
                             socket.send(data);
                         }
                     }
