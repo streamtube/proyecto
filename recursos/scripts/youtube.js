@@ -29,6 +29,10 @@ function crearVideoDeYoutube(id) {
         });
         videoIdActual = id;
     }
+   else {
+        player.loadVideoByID(id)
+    }
+
 }
 
 function onYouTubeIframeAPIReady() {
