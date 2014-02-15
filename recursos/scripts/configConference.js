@@ -56,8 +56,9 @@ $(document).ready(function() {
             if (typeof roomsList === 'undefined') roomsList = document.body;
 
             var div = document.createElement('div');
-            div.innerHTML = '<div class="right"><button class="join">Unirse</button></div>' + '<div class="left">La conferencia <strong>' + room.roomName +
-                '</strong> está disponible</div>';
+            div.className = "room";
+            div.innerHTML ='<span>La conferencia <strong>' + room.roomName + '</strong> está disponible</span>' +
+                '<button class="join">Unirse</button>';
             roomsList.insertBefore(div, roomsList.firstChild);
 
             var joinRoomButton = div.querySelector('.join');
