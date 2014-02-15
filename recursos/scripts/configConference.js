@@ -55,12 +55,12 @@ $(document).ready(function() {
 
             if (typeof roomsList === 'undefined') roomsList = document.body;
 
-            var tr = document.createElement('tr');
-            tr.innerHTML = '<td>La conferencia <strong>' + room.roomName + '</strong> está disponible</td>' +
-                '<td><button class="join">Unirse</button></td>';
-            roomsList.insertBefore(tr, roomsList.firstChild);
+            var div = document.createElement('div');
+            div.innerHTML = '<div class="right"><button class="join">Unirse</button></div>' + '<div class="left">La conferencia <strong>' + room.roomName +
+                '</strong> está disponible</div>';
+            roomsList.insertBefore(div, roomsList.firstChild);
 
-            var joinRoomButton = tr.querySelector('.join');
+            var joinRoomButton = div.querySelector('.join');
             joinRoomButton.setAttribute('data-broadcaster', room.broadcaster);
             joinRoomButton.setAttribute('data-roomToken', room.roomToken);
             joinRoomButton.setAttribute('data-ultimomensaje', JSON.stringify(room.mensaje));
