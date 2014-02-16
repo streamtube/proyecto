@@ -1,3 +1,5 @@
+/*global YT*/
+
 // 2. This code loads the IFrame Player API code asynchronously.
 var tag = document.createElement('script');
 
@@ -118,9 +120,5 @@ $(document).ready(function() {
         var socket = conferenceUI.getSocket();
         var datos = { videoId: videoID, videoPaused: false, videoStarted: false };
         socket.emit("youtube", datos);
-        function goBack()
-        {
-            window.history.go(document.createElement)
-        }
     });
 });

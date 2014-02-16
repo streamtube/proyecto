@@ -273,13 +273,15 @@ var conference = function(config) {
         getSocket: function() {
             return {
                 emit: function(name, data) {
+                    console.log(data);
+                    console.log(self.ultimoMensajeRecibido);
+                    self.ultimoMensajeRecibido = data;
                     var length = sockets.length;
                     for (var i = 0; i < length; i++) {
                         var socket = sockets[i];
                         if (socket) {
                             console.log("Socket emit youtube");
                             data.youtube = true;
-                            self.ultimoMensajeRecibido = data;
                             socket.send(data);
                         }
                     }
