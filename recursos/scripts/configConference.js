@@ -55,15 +55,16 @@ $(document).ready(function() {
 
             if (typeof roomsList === 'undefined') roomsList = document.body;
 
-            var tr = document.createElement('tr');
-            tr.innerHTML = '<td>La conferencia <strong>' + room.roomName + '</strong> está disponible</td>' +
-                '<td><button class="join">Unirse</button></td>';
-            roomsList.insertBefore(tr, roomsList.firstChild);
+            var div = document.createElement('div');
+            div.className = "room";
+            div.innerHTML ='<span>La conferencia <strong>' + room.roomName + '</strong> está disponible</span>' +
+                '<button class="join">Unirse</button>';
+            roomsList.insertBefore(div, roomsList.firstChild);
 
-            var joinRoomButton = tr.querySelector('.join');
+            var joinRoomButton = div.querySelector('.join');
             joinRoomButton.setAttribute('data-broadcaster', room.broadcaster);
             joinRoomButton.setAttribute('data-roomToken', room.roomToken);
-            joinRoomButton.setAttribute('data-ultimomensaje', room.mensaje);
+            joinRoomButton.setAttribute('data-ultimomensaje', JSON.stringify(room.mensaje));
             console.log(room.mensaje);
 
             var callbackOnRoomClosed = this.onRoomClosed;
@@ -77,13 +78,14 @@ $(document).ready(function() {
 
                 var broadcaster = this.getAttribute('data-broadcaster');
                 var roomToken = this.getAttribute('data-roomToken');
-                var ultimoSmsYtb = this.getAttribute('data-ultimomensaje');
+                var ultimoSmsYtb = JSON.parse(this.getAttribute('data-ultimomensaje'));
                 captureUserMedia(function() {
                     conferenceUI.joinRoom({
                         roomToken: roomToken,
                         joinUser: broadcaster,
                         ultimoSms: ultimoSmsYtb
                     });
+                    conferenceUI.onVideoMessage(ultimoSmsYtb);
                 });
             };
         },
