@@ -243,7 +243,8 @@ var conference = function(config) {
     }
 
     openDefaultSocket();
-    return {
+
+    var conferenceUI = {
         createRoom: function(_config) {
             self.roomName = _config.roomName || 'Anonymous';
             self.roomToken = uniqueToken();
@@ -270,25 +271,31 @@ var conference = function(config) {
             });
         },
 
-        getSocket: function() {
-            return {
-                emit: function(name, data) {
-                    console.log(data);
-                    console.log(self.ultimoMensajeRecibido);
-                    self.ultimoMensajeRecibido = data;
-                    var length = sockets.length;
-                    for (var i = 0; i < length; i++) {
-                        var socket = sockets[i];
-                        if (socket) {
-                            console.log("Socket emit youtube");
-                            data.youtube = true;
-                            socket.send(data);
-                        }
-                    }
+        enviarDatosServidor:  function(name, data) {
+            console.log(data);
+            console.log(self.ultimoMensajeRecibido);
+            self.ultimoMensajeRecibido = data;
+            var length = sockets.length;
+            for (var i = 0; i < length; i++) {
+                var socket = sockets[i];
+                if (socket) {
+                    console.log("Socket emit youtube");
+                    data.youtube = true;
+                    socket.send(data);
                 }
             }
         },
 
+        getSocket: function() {
+            var socket = {
+                emit:this.enviarDatosServidor
+            };
+
+            return socket;
+
+        },
+
         leaveRoom: leave
     };
+    return conferenceUI;
 };
