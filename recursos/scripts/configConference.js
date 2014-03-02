@@ -83,7 +83,7 @@ $(document).ready(function() {
                         joinUser: broadcaster,
                         ultimoSms: ultimoSmsYtb
                     });
-                    conferenceUI.onVideoMessage(ultimoSmsYtb);
+                    config.onVideoMessage(ultimoSmsYtb);
                 });
             };
         },
