@@ -240,6 +240,21 @@ var conference = function(config) {
         return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
     }
 
+    function enviarDatosServidor(name, data) {
+        console.log(data);
+        console.log(self.ultimoMensajeRecibido);
+        self.ultimoMensajeRecibido = data;
+        var length = sockets.length;
+        for (var i = 0; i < length; i++) {
+            var socket = sockets[i];
+            if (socket) {
+                console.log("Socket emit youtube");
+                data.youtube = true;
+                socket.send(data);
+            }
+        }
+    }
+
     openDefaultSocket();
 
     var conferenceUI = {
@@ -269,24 +284,9 @@ var conference = function(config) {
             });
         },
 
-        enviarDatosServidor:  function(name, data) {
-            console.log(data);
-            console.log(self.ultimoMensajeRecibido);
-            self.ultimoMensajeRecibido = data;
-            var length = sockets.length;
-            for (var i = 0; i < length; i++) {
-                var socket = sockets[i];
-                if (socket) {
-                    console.log("Socket emit youtube");
-                    data.youtube = true;
-                    socket.send(data);
-                }
-            }
-        },
-
         getSocket: function() {
             var socket = {
-                emit:this.enviarDatosServidor
+                emit: enviarDatosServidor
             };
 
             return socket;
