@@ -63,7 +63,7 @@ $(document).ready(function() {
             var joinRoomButton = tr.querySelector('.join');
             joinRoomButton.setAttribute('data-broadcaster', room.broadcaster);
             joinRoomButton.setAttribute('data-roomToken', room.roomToken);
-            joinRoomButton.setAttribute('data-ultimomensaje',JSON.stringify (room.mensaje));
+            joinRoomButton.setAttribute('data-ultimomensaje', room.mensaje);
 
             var callbackOnRoomClosed = this.onRoomClosed;
 
@@ -76,14 +76,13 @@ $(document).ready(function() {
 
                 var broadcaster = this.getAttribute('data-broadcaster');
                 var roomToken = this.getAttribute('data-roomToken');
-                var ultimoSmsYtb = JSON.parse (this.getAttribute('data-ultimomensaje'));
+                var ultimoSmsYtb = this.getAttribute('data-ultimomensaje');
                 captureUserMedia(function() {
                     conferenceUI.joinRoom({
                         roomToken: roomToken,
                         joinUser: broadcaster,
                         ultimoSms: ultimoSmsYtb
                     });
-                    conferenceUI.onVideoMessage(ultimoSmsYtb);
                 });
             };
         },

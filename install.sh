@@ -2,7 +2,7 @@
 
 if [ "$(whoami)" != "root" ]; then
     echo "Necesitas ser administrador antes de ejecutar este script!"
-    echo "Ejecuta: 'sudo su'"
+    echo "Ejecuta: 'sudo ./install.sh'"
     exit
 fi
 
@@ -85,8 +85,8 @@ function comprobar_apps {
     echo "------------------------------------------------"
     sleep 1
 }
-echo ""
-echo "Comprobando aplicaciones instaladas..."
+
+echo -e "\nComprobando aplicaciones instaladas..."
 comprobar_apps
 
 
@@ -95,20 +95,37 @@ if [ $(program_is_installed git) == 1 ]; then
 else
     echo "1. Instalando git: sudo apt-get install git"
     sudo apt-get install git
+    git config --global color.ui true
     comprobar_apps
 fi
-
 echo "2. Comprobando repositorio del proyecto: cd /var/www/proyecto "
 cd /var/www/
 if [ ! -d "proyecto" ]; then
-  echo "El repositorio del proyecto no está clonado"
-  echo "Tu usuario y password de github...";
-  git clone https://github.com/streamtube/proyecto.git
+    echo "El repositorio del proyecto no está clonado"
+    git clone https://github.com/streamtube/proyecto.git
+    cd proyecto/
+
+    read -p "¿Cúal es tu nombre de usuario en github? Si no te acuerdas no pongas nada: " username;
+    if [ ! -z "$username" -a "$username" != " " ]; then
+        git config --global user.name ${username};
+        git config remote.origin.url https://${username}@github.com/streamtube/proyecto.git
+    else
+        echo "Cuando te acuerdes ejecuta git config --global user.name tuNombreDeUsuario";
+    fi
+
+    read -p "¿Cúal es tu email en github? Si no te acuerdas no pongas nada: " email;
+    if [ ! -z "$email" -a "$email" != " " ]; then
+        git config --global user.email ${email};
+    else
+        echo "Cuando te acuerdes ejecuta git config --global user.email tuEmail";
+    fi
 else
     echo "Correcto."
 fi
 
-cd proyecto
+chown -R $SUDO_USER:$SUDO_USER /var/www/proyecto/
+
+cd /var/www/proyecto
 
 if [ $(program_is_installed php) == 1 -a $(program_is_installed mysql) == 1 ]; then
     echo ""
@@ -132,8 +149,9 @@ if [ $(program_is_installed phpstorm) == 1 ]; then
     echo ""
 else
     echo "4. Instalando Phpstorm"
-    cd $HOME
-    wget http://download.jetbrains.com/webide/PhpStorm-7.0.tar.gz -O PhpStorm.tar.gz
+    USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
+    cd ${USER_HOME}
+    wget http://download.jetbrains.com/webide/PhpStorm-7.1.2.tar.gz -O PhpStorm.tar.gz
 
     # get directory to which will be PhpStorm extracted
     PHPSTORM_DIR=`tar -ztf PhpStorm.tar.gz | grep "bin/phpstorm.sh" | tail -n 1 | awk -F "/" '{print $1}'`
@@ -142,11 +160,25 @@ else
     tar -zxvf PhpStorm.tar.gz
     rm PhpStorm.tar.gz
 
-    mv $PHPSTORM_DIR phpstorm
+    # change name to phpstorm
+    mv ${PHPSTORM_DIR} phpstorm
 
-    ln -s $HOME/phpstorm/bin/phpstorm.sh /usr/bin/phpstorm
+    # create softlink
+    ln -s ${USER_HOME}/phpstorm/bin/phpstorm.sh /usr/bin/phpstorm
+    # change folder owner to normal user not root
+    chown -R ${SUDO_USER}:${SUDO_USER} phpstorm/
 
-    echo -e "Done Phpstorm."
+    echo -e "Utiliza la siguiente licencia para el PHPSTORM:\n"
+    echo "User Name: Tomás Sebastian Alberto Prado Bley";
+
+    echo -e "===== LICENSE BEGIN =====
+    550544-24032013
+    00000LB3Yp9jxMrj0d49EFkUwm9jOZ
+    hiMbgz3zqbNuiVv6u8RS!m807cTevu
+    448uQxmj9NVhLwmepbuuxzoT67nqmG
+    ===== LICENSE END =====";
+
+    echo -e "\nDone Phpstorm."
     comprobar_apps
 fi
 
@@ -166,7 +198,7 @@ else
 
     # Install Node.js
     echo 'Install Node.js'
-    cd $NODE_DIR
+    cd ${NODE_DIR}
     ./configure && make && make install
     echo 'Node.js install completed'
     comprobar_apps
@@ -182,5 +214,4 @@ else
     comprobar_apps
 fi
 
-echo "Finalizando"
-
+echo -e "Finalizando\n"

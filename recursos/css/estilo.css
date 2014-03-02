@@ -2,12 +2,17 @@
     font-family: 'hasa';
     font-style: normal;
     font-weight: normal;
-    src: url('../fonts/hasa.ttf');
+    src: url('../fonts/BolsterBold.part');
 }
 
 body {
  	background-image: url("../imagenes/fondodefinitivo.jpg");
     background-position: center;
+}
+
+.centrado {
+    text-align: center;
+    display: block;
 }
 
 #titulo {
@@ -16,7 +21,6 @@ body {
     text-shadow: 3px 3px 3px grey;
     text-decoration-line: underline;
     font-size: 30px;
-    text-align: center;
 }
 
 input{
@@ -41,6 +45,15 @@ button {
     width: 60px;
 }
 
+video {
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+}
+
 #contenedor {
     margin-top: 10px;
 }
@@ -61,4 +74,8 @@ button {
 
 #video-youtube {
     margin: 0 auto;
+}
+
+.room {
+
 }

@@ -1,3 +1,5 @@
+/*global YT*/
+
 // 2. This code loads the IFrame Player API code asynchronously.
 var tag = document.createElement('script');
 
@@ -27,8 +29,12 @@ function crearVideoDeYoutube(id) {
                 'onStateChange': onPlayerStateChange
             }
         });
-        videoIdActual = videoIdActual;
+        videoIdActual = id;
     }
+   else if(
+        player.loadVideoByID(id));
+
+
 }
 
 function onYouTubeIframeAPIReady() {
