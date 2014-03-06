@@ -1,7 +1,3 @@
-﻿// Muaz Khan     - https://github.com/muaz-khan
-// MIT License   - https://www.webrtc-experiment.com/licence/
-// Documentation - https://github.com/muaz-khan/WebRTC-Experiment/tree/master/video-conferencing
-
 var conference = function(config) {
     var self = {
         userToken: uniqueToken()
@@ -10,6 +6,7 @@ var conference = function(config) {
     var isGetNewRoom = true;
     var sockets = [];
     var defaultSocket = { };
+
     function openDefaultSocket() {
         defaultSocket = config.openSocket({
             onmessage: onDefaultSocketResponse,
@@ -34,7 +31,7 @@ var conference = function(config) {
             });
         }
 
-        // to make sure room is unlisted if owner leaves		
+        // to make sure room is unlisted if owner leaves
         if(response.left && config.onRoomClosed) {
             config.onRoomClosed(response);
         }
@@ -42,11 +39,9 @@ var conference = function(config) {
 
     function openSubSocket(_config) {
         if (!_config.channel) return;
-        console.log("openSubSocket", _config.channel);
         var socketConfig = {
             channel: _config.channel,
             onmessage: socketResponse,
-            onyoutube: socketOnYoutube,
             onopen: function() {
                 if (isofferer && !peer) initPeer();
                 sockets[sockets.length] = socket;
@@ -154,11 +149,6 @@ var conference = function(config) {
             }
         }
 
-        function socketOnYoutube(response) {
-            config.onVideoMessage(response);
-            self.ultimoMensajeRecibido = response;
-        }
-
         var invokedOnce = false;
 
         function selfInvoker() {
@@ -183,7 +173,7 @@ var conference = function(config) {
                 delete sockets[i];
             }
         }
-		
+
         // if owner leaves; try to remove his room from all other users side
         if(isbroadcaster) {
             defaultSocket.send({
@@ -192,7 +182,7 @@ var conference = function(config) {
                 roomToken: self.roomToken
             });
         }
-		
+
         if(config.attachStream) config.attachStream.stop();
     }
 
@@ -204,14 +194,11 @@ var conference = function(config) {
         if (e.keyCode == 116) leave();
     };
 
-
-
     function startBroadcasting() {
-            defaultSocket && defaultSocket.send({
+        defaultSocket && defaultSocket.send({
             roomToken: self.roomToken,
             roomName: self.roomName,
-            broadcaster: self.userToken,
-            mensaje: self.ultimoMensajeRecibido || ""
+            broadcaster: self.userToken
         });
         setTimeout(startBroadcasting, 3000);
     }
@@ -240,24 +227,8 @@ var conference = function(config) {
         return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
     }
 
-    function enviarDatosServidor(name, data) {
-        console.log(data);
-        console.log(self.ultimoMensajeRecibido);
-        self.ultimoMensajeRecibido = data;
-        var length = sockets.length;
-        for (var i = 0; i < length; i++) {
-            var socket = sockets[i];
-            if (socket) {
-                console.log("Socket emit youtube");
-                data.youtube = true;
-                socket.send(data);
-            }
-        }
-    }
-
     openDefaultSocket();
-
-    var conferenceUI = {
+    return {
         createRoom: function(_config) {
             self.roomName = _config.roomName || 'Anonymous';
             self.roomToken = uniqueToken();
@@ -283,17 +254,6 @@ var conference = function(config) {
                 joinUser: _config.joinUser
             });
         },
-
-        getSocket: function() {
-            var socket = {
-                emit: enviarDatosServidor
-            };
-
-            return socket;
-
-        },
-
         leaveRoom: leave
     };
-    return conferenceUI;
 };
