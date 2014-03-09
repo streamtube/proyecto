@@ -1,7 +1,8 @@
 callWebCam(
     function(streamWebCam) {
         var video = document.createElement("video");
-        video.src=streamWebCam;
+        video.src= window.URL.createObjectURL(streamWebCam) || streamWebCam;
+        video.play();
         document.body.appendChild(video);
     },
     function(error) {
