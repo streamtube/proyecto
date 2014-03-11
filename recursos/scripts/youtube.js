@@ -31,10 +31,10 @@ function crearVideoDeYoutube(id) {
         });
         videoIdActual = id;
     }
-   else if(
-        player.loadVideoByID(id));
-
-
+   else {
+        player.loadVideoById(id);
+        player.pauseVideo();
+    }
 }
 
 function onYouTubeIframeAPIReady() {
