@@ -12,6 +12,7 @@
 </div>
 <div id="search-container">
 </div>
+<div id="video"></div>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script>
     /*global gapi*/
@@ -41,8 +42,15 @@
         var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q="+q+"&key=AIzaSyAMM2O1jubIbmRfjuW_Hghsuvtcm2zGoTM";
 
         $.get(url, function(response) {
-            var str = JSON.stringify(response);
-            $('#search-container').html('<pre>' + str + '</pre>');
+            var size = response.items.length;
+            for (var i = 0; i < size; i++) {
+                var video = response.items[i];
+                var img = $('<img>');
+                img.attr('src', video.snippet.thumbnails.default.url);
+                img.appendTo('#search-container');
+            }
+            //var str = JSON.stringify(response);
+            //$('#search-container').html('<pre>' + str + '</pre>');
         });
     }
 </script>
