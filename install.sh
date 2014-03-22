@@ -168,16 +168,6 @@ else
     # change folder owner to normal user not root
     chown -R ${SUDO_USER}:${SUDO_USER} phpstorm/
 
-    echo -e "Utiliza la siguiente licencia para el PHPSTORM:\n"
-    echo "User Name: Tomás Sebastian Alberto Prado Bley";
-
-    echo -e "===== LICENSE BEGIN =====
-    550544-24032013
-    00000LB3Yp9jxMrj0d49EFkUwm9jOZ
-    hiMbgz3zqbNuiVv6u8RS!m807cTevu
-    448uQxmj9NVhLwmepbuuxzoT67nqmG
-    ===== LICENSE END =====";
-
     echo -e "\nDone Phpstorm."
     comprobar_apps
 fi
