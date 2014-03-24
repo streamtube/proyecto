@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Search</title>
 </head>
@@ -7,7 +7,8 @@
 <div id="buttons">
     <label>
         <input id="query" value='cats' type="text"/>
-        <button id="search-button" disabled onclick="searchGET()">Search</button>
+        <button id="search-button" disabled onclick="clearBox('#search-container'), clearBox('#video'), searchGET()">Search</button>
+        <button onclick="clearBox('#search-container'), clearBox('#video')">Borrar</button>
     </label>
 </div>
 <div id="search-container">
@@ -43,16 +44,33 @@
 
         $.get(url, function(response) {
             var size = response.items.length;
+
+
             for (var i = 0; i < size; i++) {
-                var video = response.items[i];
-                var img = $('<img>');
+                video = response.items[i];
+                videoYT = video.id.videoId;
+                var img = $('<img onclick = "clearBox(\'#video\'), showVideo(videoYT)">');
                 img.attr('src', video.snippet.thumbnails.default.url);
                 img.appendTo('#search-container');
+                //var playVideo = $('<iframe width="640" height="390" frameborder="0" style="visibility: visible;display: block" id="video-youtube" allowfullscreen="1" title="YouTube video player"/>').attr('src', "https://www.youtube.com/embed/"+videoYT).appendTo('#video');
             }
             //var str = JSON.stringify(response);
             //$('#search-container').html('<pre>' + str + '</pre>');
         });
     }
+
+
+
+    function showVideo(video){
+        $('<iframe width="640" height="390" frameborder="0" style="visibility: visible;display: block" id="video-youtube" allowfullscreen="1" title="YouTube video player"/>').attr('src', "https://www.youtube.com/embed/"+video).appendTo('#video');
+        console.log(videoYT);
+    }
+
+    function clearBox(element)
+    {
+        $(element).empty();
+    }
+
 </script>
 <script src="//apis.google.com/js/client.js?onload=handleAPILoaded"></script>
 </body>
