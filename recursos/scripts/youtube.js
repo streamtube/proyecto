@@ -115,10 +115,38 @@ function sendVideoStarted(info) {
 
 $(document).ready(function() {
     $("#botoncrear").on("click",function () {
-        var videoID = $("#youtubeid").val();
+
+        clearBox('#search-container')
+        var q = $('#youtubeid').val();
+        var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q="+q+"&key=AIzaSyAMM2O1jubIbmRfjuW_Hghsuvtcm2zGoTM";
+
+        $.get(url, function(response) {
+            var size = response.items.length;
+
+
+            for (var i = 0; i < size; i++) {
+                var video = response.items[i];
+                var videoYT = video.id.videoId;
+                var title = video.snippet.title;
+                var img = $('<img>');
+                img.attr('src', video.snippet.thumbnails.default.url);
+                img.attr('title', video.snippet.title);
+                img.on('click', crearVideoDeYoutube.bind(this, videoYT));
+                img.appendTo('#search-container');
+                //var playVideo = $('<iframe width="640" height="390" frameborder="0" style="visibility: visible;display: block" id="video-youtube" allowfullscreen="1" title="YouTube video player"/>').attr('src', "https://www.youtube.com/embed/"+videoYT).appendTo('#video');
+            }
+            //var str = JSON.stringify(response);
+            //$('#search-container').html('<pre>' + str + '</pre>');
+        });
+        /*var videoID = $("#youtubeid").val();
         crearVideoDeYoutube(videoID);
         var socket = conferenceUI.getSocket();
         var datos = { videoId: videoID, videoPaused: false, videoStarted: false };
-        socket.emit("youtube", datos);
+        socket.emit("youtube", datos);*/
     });
 });
+
+function clearBox(element)
+{
+    $(element).empty();
+}
