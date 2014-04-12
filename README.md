@@ -1,7 +1,7 @@
 Proyecto StreamTube
 ---------
 
-- Domingo 29/02/2014    
+- Domingo 29/03/2014    
 > Avance en la investigación de la extensión de Chrome. Creado el botón (Imagen y funcionalidad). (Guillem)    
 > Avance en la investigación de la API Iframe de Youtube. Busqueda de videos, resultado de videos. (Pere)   
 > Avance en la investigación de webRTC. Obtención del stream de la webcam local con getUserMedia. (Javi)   
