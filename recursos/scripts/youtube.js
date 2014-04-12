@@ -144,6 +144,10 @@ $(document).ready(function() {
         var datos = { videoId: videoID, videoPaused: false, videoStarted: false };
         socket.emit("youtube", datos);*/
     });
+    $("#botonborrar").on("click", function () {
+        clearBox('#search-container');
+        clearBox('#video-youtube');
+    });
 });
 
 function clearBox(element)
