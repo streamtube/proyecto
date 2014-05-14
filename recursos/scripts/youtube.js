@@ -118,7 +118,7 @@ $(document).ready(function() {
 
         clearBox('#search-container')
         var q = $('#youtubeid').val();
-        var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q="+q+"&key=AIzaSyAMM2O1jubIbmRfjuW_Hghsuvtcm2zGoTM";
+        var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q="+q+"&key=AIzaSyAMM2O1jubIbmRfjuW_Hghsuvtcm2zGoTM";
 
         $.get(url, function(response) {
             var size = response.items.length;
