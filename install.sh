@@ -141,7 +141,7 @@ else
     echo "4. Instalando Java (para el phpstorm)"
     sudo add-apt-repository ppa:webupd8team/java
     sudo apt-get update
-    sudo apt-get install oracle-java7-installer
+    sudo apt-get install oracle-java8-installer
     comprobar_apps
 fi
 
