@@ -151,7 +151,7 @@ else
     echo "4. Instalando Phpstorm"
     USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
     cd ${USER_HOME}
-    wget http://download.jetbrains.com/webide/PhpStorm-7.1.2.tar.gz -O PhpStorm.tar.gz
+    wget http://download.jetbrains.com/webide/PhpStorm-7.1.3.tar.gz -O PhpStorm.tar.gz
 
     # get directory to which will be PhpStorm extracted
     PHPSTORM_DIR=`tar -ztf PhpStorm.tar.gz | grep "bin/phpstorm.sh" | tail -n 1 | awk -F "/" '{print $1}'`
