@@ -179,7 +179,7 @@ else
     sudo apt-get install g++
     mkdir /tmp/node-install
     cd /tmp/node-install
-    wget http://nodejs.org/dist/v0.10.21/node-v0.10.21.tar.gz -O node.tar.gz
+    wget http://nodejs.org/dist/v0.10.28/node-v0.10.28.tar.gz -O node.tar.gz
 
     NODE_DIR=`tar -ztf node.tar.gz | grep "Makefile" | tail -n 1 | awk -F "/" '{print $1}'`
 
