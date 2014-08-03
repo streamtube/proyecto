@@ -4,13 +4,5 @@ navigator.getMedia = ( navigator.getUserMedia ||
                        navigator.msGetUserMedia);
 
 function callWebCam(callbackTodoBien, callbackTodoMal) {
-    navigator.getMedia({
-        video: {
-            "mandatory":{"maxWidth":"640","maxHeight":"360"}
-        },
-        audio: true
-    },
-        callbackTodoBien,
-        callbackTodoMal
-    );
+    navigator.getMedia({video: true,audio: true}, callbackTodoBien, callbackTodoMal);
 }
