@@ -9,32 +9,29 @@ var Video = function() {
  */
 Video.prototype.cargarVideo = function(streamWebCam) {
     var contenedor = document.createElement("div");
-    contenedor.id = "contenedor";
+    contenedor.className = "contenedor";
 
     this.video = document.createElement("video");
     contenedor.appendChild(this.video);
 
-    this.video.id = "video";
+    this.video.className = "video";
     this.video.autoplay = true;
 
     this.video.src = window.URL.createObjectURL(streamWebCam);
 
     this.video.play();
 
-    this.video.height = 200;
-    this.video.width = 400;
-
     var conBotones = document.createElement("div");
-    conBotones.id = "conBotones";
+    conBotones.className = "conBotones";
 
     this.mute = document.createElement("button");
     this.mute.type = "button";
-    this.mute.id = "mute";
-    this.mute.innerText = "Mute";
+    this.mute.className = "mute boton";
+    this.mute.textContent = "Mute";
     conBotones.appendChild(this.mute);
 
     this.volum = document.createElement("input");
-    this.volum.id = "volum";
+    this.volum.className = "volum";
     this.volum.type = "range";
     this.volum.min = "0";
     this.volum.max = "1";
