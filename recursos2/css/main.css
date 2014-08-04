@@ -1,21 +1,31 @@
 @font-face {
-    font-family: 'hasa';
+    font-family: 'BolsterBold';
     font-style: normal;
     font-weight: normal;
     src: url('../fonts/BolsterBold.part');
 }
 
-.centrado {
-    text-align: center;
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.izquierda {
+    margin: 0;
+    padding-left: 10px;
+    text-align: left;
     display: block;
 }
 
 .titulo {
-    font-family: hasa,sans-serif;
+    font-family: BolsterBold, sans-serif;
     color: white;
-    text-shadow: 3px 3px 3px grey;
-    text-decoration-line: underline;
+    text-shadow: 2px 1px 6px black;
     font-size: 30px;
+    box-shadow: 0 2px 13px 0 gray;
+    top: 0;
+    position: relative;
+    height: 50px;
 }
 
 .contenedor {

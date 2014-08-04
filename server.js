@@ -2,7 +2,7 @@ var server  = require('http').createServer(),
     sio      = require('socket.io'),
     port    = 8081;
 server.listen(port);
-var io = sio.listen(server, { log:false });
+var io = sio.listen(server, { log:true });
 
 var channels = {};
 
@@ -30,6 +30,8 @@ io.sockets.on('connection', function (socket) {
         if (initiatorChannel)
             channels[initiatorChannel] = null;
     });
+
+    socket.emit('conectado', socket.id);
 });
 
 function onNewNamespace(channel, sender) {
