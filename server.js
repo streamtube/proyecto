@@ -7,7 +7,11 @@ var io = sio.listen(server, { log:true });
 var channels = {};
 
 io.sockets.on('connection', function (socket) {
-    console.log("Cliente conectado");
+    console.log('[+]','****** '+socket.id+' ******');
+    console.log('[+]', socket.handshake.time, " -> Cliente conectado ");
+    console.log('[+]', socket.handshake.headers['user-agent']);
+    console.log('[+]','****** '+socket.id+' ******');
+
     var initiatorChannel = '';
     if (!io.isConnected)
         io.isConnected = true;
@@ -26,7 +30,10 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function (channel) {
-        console.log("Cliente desconectado");
+        console.log('[+]','****** '+socket.id+' ******');
+        console.log('[+]', socket.handshake.time, "Cliente desconectado ", channel);
+        console.log('[+]', socket.handshake.headers['user-agent']);
+        console.log('[+]','****** '+socket.id+' ******');
         if (initiatorChannel)
             channels[initiatorChannel] = null;
     });
@@ -54,5 +61,4 @@ function onNewNamespace(channel, sender) {
     });
 }
 
-console.log('1- Escuchando en http://localhost:' + port , "");
-console.log("");
+console.log('[+]','Escuchando http://localhost:' + port , "\n");
