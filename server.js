@@ -7,10 +7,7 @@ var io = sio.listen(server, { log:true });
 var channels = {};
 
 io.sockets.on('connection', function (socket) {
-    console.log('[+]','****** '+socket.id+' ******');
-    console.log('[+]', socket.handshake.time, " -> Cliente conectado ");
-    console.log('[+]', socket.handshake.headers['user-agent']);
-    console.log('[+]','****** '+socket.id+' ******');
+    log(socket, "Cliente conectado", socket.handshake.headers['user-agent']);
 
     var initiatorChannel = '';
     if (!io.isConnected)
@@ -18,7 +15,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('new-channel', function (data) {
         channels[data.channel] = data.channel;
-        console.log("Nuevo canal", data);
+        log(socket, "Nuevo canal", data);
         onNewNamespace(data.channel, data.sender);
     });
 
@@ -30,10 +27,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function (channel) {
-        console.log('[+]','****** '+socket.id+' ******');
-        console.log('[+]', socket.handshake.time, "Cliente desconectado ", channel);
-        console.log('[+]', socket.handshake.headers['user-agent']);
-        console.log('[+]','****** '+socket.id+' ******');
+        log(socket, "Cliente desconectado ", channel);
         if (initiatorChannel)
             channels[initiatorChannel] = null;
     });
@@ -54,11 +48,20 @@ function onNewNamespace(channel, sender) {
         });
 
         socket.on('youtube', function(data) {
-            console.log("Reenviando mensaje de youtube a "+channel);
-            console.log(data);
+            log(socket, "Reenviando mensaje de youtube a "+channel, data);
             socket.broadcast.emit('youtube', data);
         });
     });
+}
+
+
+function log(socket, message, extra) {
+    console.log('[+]','****** '+socket.id+' ******');
+    console.log('[+]', socket.handshake.time, " -> "+message);
+    if(extra) {
+        console.log('[+]', extra);
+    }
+    console.log('[+]','****** '+socket.id+' ******');
 }
 
 console.log('[+]','Escuchando http://localhost:' + port , "\n");
