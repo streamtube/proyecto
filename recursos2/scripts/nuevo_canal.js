@@ -1,3 +1,5 @@
+var webcam = new Webcam();
+
 var button_new_channel = document.getElementById('js_new_channel_buton');
 button_new_channel.addEventListener('click', botonCrearCanalClicado);
 
@@ -22,5 +24,5 @@ socket.on('canal_creado', function(channel) {
     var titulo = channelContent.querySelector('.titulo');
     titulo.textContent = channel.nombre;
 
-    callWebCam();
+    webcam.callWebCam();
 });
