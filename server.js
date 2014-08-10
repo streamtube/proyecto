@@ -4,6 +4,20 @@ var server  = require('http').createServer(),
 server.listen(port);
 var io = sio.listen(server, { log:true });
 
+var ip = 'localhost';
+var os=require('os');
+var ifaces=os.networkInterfaces();
+for (var dev in ifaces) {
+    var alias=0;
+    ifaces[dev].forEach(function(details){
+        if (details.family=='IPv4' && dev !== 'lo') {
+            ip = details.address;
+            ++alias;
+        }
+    });
+}
+
+
 var users = {};
 var channels = {};
 
@@ -14,9 +28,15 @@ io.sockets.on('connection', function (socket) {
         io.isConnected = true;
 
     socket.on('new-channel', function (data) {
-        channels[data.channel] = data.channel;
-        log(socket, "Nuevo canal", data);
-        onNewNamespace(data.channel, socket.id);
+        channels[data.nombre] = {
+            nombre: data.nombre,
+            creador: socket.id
+        };
+        log(socket, 'Nuevo canal: '+data.nombre);
+        onNewNamespace(data.nombre, socket.id);
+        console.log('[+]','Escuchando el canal en la dirección', 'http://'+ip+':' + port +"/"+data.nombre, "\n");
+        socket.emit('canal_creado', {nombre:data.nombre});
+        socket.broadcast.emit('nuevo canal', {nombre:data.nombre});
     });
 
     socket.on('disconnect', function (channel) {
@@ -26,6 +46,7 @@ io.sockets.on('connection', function (socket) {
 
     users[socket.id] = {name: socket.id};
     socket.emit('conectado', socket.id);
+    socket.emit('canales', channels);
 });
 
 function onNewNamespace(channel, sender) {
@@ -44,6 +65,8 @@ function onNewNamespace(channel, sender) {
             log(socket, "Reenviando mensaje de youtube a "+channel, data);
             socket.broadcast.emit('youtube', data);
         });
+
+        socket.emit('canal-conectado', {url: socket.handshake.headers.referrer+'?c='+channel+'&s='+socket.id});
     });
 }
 
@@ -55,19 +78,6 @@ function log(socket, message, extra) {
         console.log('[+]', extra);
     }
     console.log('[+]','****** '+socket.id+' ******');
-}
-
-var ip = 'localhost';
-var os=require('os');
-var ifaces=os.networkInterfaces();
-for (var dev in ifaces) {
-    var alias=0;
-    ifaces[dev].forEach(function(details){
-        if (details.family=='IPv4' && dev !== 'lo') {
-            ip = details.address;
-            ++alias;
-        }
-    });
 }
 
 console.log('[+]','Escuchando en la dirección', 'http://'+ip+':' + port , "\n");

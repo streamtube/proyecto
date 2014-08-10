@@ -9,25 +9,30 @@
 <header>
     <span class="titulo izquierda">STREAMTUBE</span>
     <div class="bloque_nuevo_nombre">
-        <input id="js-username" type="text" value="No asignado">
+        <input id="js-username" type="text" value="Servidor no conectado">
         <span class="letrita bloque">este es tu nombre de usuario</span>
     </div>
 </header>
 
-<div id="content">
+<div id="home-content">
     <div id="new_channel_form">
         <input id="js_new_channel_name" type="text" value="" placeholder="Nombre del nuevo canal">
         <input id="js_new_channel_buton" type="button" value="Crear un nuevo canal">
         <span id="js_new_channel_error" class="error bloque"></span>
     </div>
+
+    <div id="lista_canales"></div>
+</div>
+
+<div id="channel-content" style="display: none">
+    <div class="titulo">Canal</div>
 </div>
 
 
 <script type="text/javascript" src="node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
 <script type="text/javascript" src="recursos2/scripts/socket.js"></script>
-<script type="text/javascript" src="recursos2/scripts/video.js"></script>
+<script type="text/javascript" src="recursos2/scripts/Video.js"></script>
 <script type="text/javascript" src="recursos2/scripts/webcam.js"></script>
-<script type="text/javascript" src="recursos2/scripts/script.js"></script>
 <script type="text/javascript" src="recursos2/scripts/nuevo_canal.js"></script>
 </body>
 </html>

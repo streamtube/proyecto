@@ -1,14 +1,26 @@
-;(function(socket) {
-    var button_new_channel = document.getElementById('js_new_channel_buton');
-    button_new_channel.addEventListener('click', function() {
-        var channelName = document.getElementById('js_new_channel_name').value;
-        if(!channelName) {
-            var errorBloque = document.getElementById('js_new_channel_error');
-            errorBloque.value = "¡El nombre del canal no puede estar vacío!";
-            return false;
-        }
+var button_new_channel = document.getElementById('js_new_channel_buton');
+button_new_channel.addEventListener('click', botonCrearCanalClicado);
 
-        socket.emit('new-channel', {channel: channelName});
-        return true;
-    });
-})(socket);
+function botonCrearCanalClicado() {
+    var errorBloque = document.getElementById('js_new_channel_error');
+    errorBloque.textContent = '';
+
+    var channelName = document.getElementById('js_new_channel_name').value;
+    if(!channelName) {
+        errorBloque.textContent = "¡El nombre del canal no puede estar vacío!";
+        return false;
+    }
+
+    socket.emit('new-channel', {nombre: channelName});
+    return true;
+}
+
+socket.on('canal_creado', function(channel) {
+    document.getElementById('home-content').style.display = "none";
+    var channelContent = document.getElementById('channel-content');
+    channelContent.style.display = "block";
+    var titulo = channelContent.querySelector('.titulo');
+    titulo.textContent = channel.nombre;
+
+    callWebCam();
+});
