@@ -82,6 +82,7 @@ function comprobar_apps {
 
     # local npm packages
     echo "      socket.io $(echo_if $(npm_package_is_installed socket.io))"
+    echo "      q $(echo_if $(npm_package_is_installed q))"
     echo "------------------------------------------------"
     sleep 1
 }
@@ -196,12 +197,7 @@ fi
 
 cd /var/www/proyecto
 
-if [ $(npm_package_is_installed socket.io) == 1 ]; then
-    echo ""
-else
-    echo "5. Instalando socket.io"
-    npm install socket.io
-    comprobar_apps
-fi
+echo "Instalando todas las demás librerias de javascript con 'npm install'"
+npm install
 
-echo -e "Finalizando\n"
+echo -e "Finalizado\n"
