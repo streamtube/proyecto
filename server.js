@@ -4,34 +4,27 @@ var server  = require('http').createServer(),
 server.listen(port);
 var io = sio.listen(server, { log:true });
 
+var users = {};
 var channels = {};
 
 io.sockets.on('connection', function (socket) {
     log(socket, "Cliente conectado", socket.handshake.headers['user-agent']);
 
-    var initiatorChannel = '';
     if (!io.isConnected)
         io.isConnected = true;
 
     socket.on('new-channel', function (data) {
         channels[data.channel] = data.channel;
         log(socket, "Nuevo canal", data);
-        onNewNamespace(data.channel, data.sender);
-    });
-
-    socket.on('presence', function (channel) {
-        var isChannelPresent = !! channels[channel];
-        socket.emit('presence', isChannelPresent);
-        if (!isChannelPresent)
-            initiatorChannel = channel;
+        onNewNamespace(data.channel, socket.id);
     });
 
     socket.on('disconnect', function (channel) {
         log(socket, "Cliente desconectado ", channel);
-        if (initiatorChannel)
-            channels[initiatorChannel] = null;
+        delete users[socket.id];
     });
 
+    users[socket.id] = {name: socket.id};
     socket.emit('conectado', socket.id);
 });
 
@@ -43,7 +36,7 @@ function onNewNamespace(channel, sender) {
         }
 
         socket.on('message', function (data) {
-            if (data.sender == sender)
+            if (socket.id == sender)
                 socket.broadcast.emit('message', data.data);
         });
 
@@ -64,4 +57,17 @@ function log(socket, message, extra) {
     console.log('[+]','****** '+socket.id+' ******');
 }
 
-console.log('[+]','Escuchando http://localhost:' + port , "\n");
+var ip = 'localhost';
+var os=require('os');
+var ifaces=os.networkInterfaces();
+for (var dev in ifaces) {
+    var alias=0;
+    ifaces[dev].forEach(function(details){
+        if (details.family=='IPv4' && dev !== 'lo') {
+            ip = details.address;
+            ++alias;
+        }
+    });
+}
+
+console.log('[+]','Escuchando en la dirección', 'http://'+ip+':' + port , "\n");

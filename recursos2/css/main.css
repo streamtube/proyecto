@@ -17,15 +17,38 @@ body {
     display: block;
 }
 
+header {
+    box-shadow: 0 2px 13px 0 gray;
+    height: 50px;
+}
+
+
 .titulo {
     font-family: BolsterBold, sans-serif;
     color: white;
     text-shadow: 2px 1px 6px black;
     font-size: 30px;
-    box-shadow: 0 2px 13px 0 gray;
-    top: 0;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.bloque_nuevo_nombre {
+    display: inline-block;
+    top: 5px;
     position: relative;
-    height: 50px;
+    left: 20px;
+}
+
+.bloque_nuevo_nombre input {
+    box-shadow: 0 0 10px 0 green;
+    width: 200px;
+    text-align: center;
+}
+
+.bloque_nuevo_nombre span {
+    font-family: sans-serif;
+    text-align: center;
+    color: gray;
 }
 
 .contenedor {
@@ -62,4 +85,12 @@ body {
 
 .video {
     width: 200px;
+}
+
+.letrita {
+    font-size: 10px;
+}
+
+.bloque {
+    display: block;
 }

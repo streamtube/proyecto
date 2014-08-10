@@ -6,16 +6,20 @@
     <link rel="stylesheet" type="text/css" href="recursos2/css/main.css">
 </head>
 <body>
-<header class="titulo izquierda">
-    STREAMTUBE
-    <input id="js-username" type="text" value="No asignado">
+<header>
+    <span class="titulo izquierda">STREAMTUBE</span>
+    <div class="bloque_nuevo_nombre">
+        <input id="js-username" type="text" value="No asignado">
+        <span class="letrita bloque">este es tu nombre de usuario</span>
+    </div>
 </header>
 
-<div>
-    <form>
-        <input type="text" value="" placeholder="Nombre del nuevo canal">
-        <input type="button" value="Crear un nuevo canal">
-    </form>
+<div id="content">
+    <div id="new_channel_form">
+        <input id="js_new_channel_name" type="text" value="" placeholder="Nombre del nuevo canal">
+        <input id="js_new_channel_buton" type="button" value="Crear un nuevo canal">
+        <span id="js_new_channel_error" class="error bloque"></span>
+    </div>
 </div>
 
 
@@ -24,5 +28,6 @@
 <script type="text/javascript" src="recursos2/scripts/video.js"></script>
 <script type="text/javascript" src="recursos2/scripts/webcam.js"></script>
 <script type="text/javascript" src="recursos2/scripts/script.js"></script>
+<script type="text/javascript" src="recursos2/scripts/nuevo_canal.js"></script>
 </body>
 </html>
