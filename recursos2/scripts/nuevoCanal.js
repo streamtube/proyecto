@@ -33,6 +33,30 @@ function botonCrearCanalClicado() {
     return true;
 }
 
+function botonUnirseAUnCanalClicado() {
+    var channelName = this.canal;
+    var canales = new Canales();
+    var promiseConectarseCanal = canales.conectarseCanal(channelName);
+    promiseConectarseCanal
+        .then(function(urlObjeto) {
+            modificarVistaParaElCanal(channelName, urlObjeto.url);
+            var localWebCam = new Webcam();
+            return localWebCam.callWebCam();
+        })
+        .then(function(localStream) {
+            var peerConnection = new PeerConnection();
+            peerConnection.createPeerConnection();
+            peerConnection.addStream(localStream);
+            peerConnection.doCall();
+        })
+        .catch(function(error) {
+            alert(error);
+            console.error(error);
+        });
+
+    return true;
+}
+
 function modificarVistaParaElCanal(channelName, url) {
     document.getElementById('home-content').style.display = "none";
     var channelContent = document.getElementById('channel-content');

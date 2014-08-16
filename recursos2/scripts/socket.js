@@ -13,7 +13,12 @@ globals.socket.on('canales', function(canales) {
     for(canal in canales) {
         if(canales.hasOwnProperty(canal)) {
             var listItem = document.createElement('li');
-            listItem.textContent = 'Canal: '+canales[canal].nombre+" ("+canales[canal].creador+")";
+            var boton = document.createElement('button');
+            boton.type = 'button';
+            boton.canal = canales[canal].nombre;
+            boton.onclick = botonUnirseAUnCanalClicado;
+            boton.textContent = 'Unirse al canal '+canales[canal].nombre+' de '+canales[canal].creador;
+            listItem.appendChild(boton);
             unorderedList.appendChild(listItem);
         }
     }
