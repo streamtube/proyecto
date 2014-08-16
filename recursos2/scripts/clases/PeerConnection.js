@@ -19,13 +19,29 @@ PeerConnection.prototype.createPeerConnection = function() {
 
     this.pc.onaddstream = this.handleRemoteStreamAdded.bind(this);
     this.pc.onremovestream = this.handleRemoteStreamRemoved.bind(this);
+
+    globals.socketCanal.on('message', function(message) {
+        console.log('Received message:', message);
+        if (message.type === 'offer') {
+            this.pc.setRemoteDescription(new RTCSessionDescription(message));
+            this.pc.createAnswer(this.setLocalAndSendMessage.bind(this));
+        } else if (message.type === 'answer') {
+            this.pc.setRemoteDescription(new RTCSessionDescription(message));
+        } else if (message.type === 'candidate') {
+            var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,candidate:message.candidate});
+            this.pc.addIceCandidate(candidate);
+        } else if (message === 'bye') {
+            //handleRemoteHangup();
+        }
+    }.bind(this));
+
 };
 
 PeerConnection.prototype.addStream = function(stream) {
     this.pc.addStream(stream);
 };
 
-PeerConnection.prototype.handleIceCandidate = function() {
+PeerConnection.prototype.handleIceCandidate = function(event) {
     console.log('handleIceCandidate event: ', event);
     if (event.candidate) {
         globals.socketCanal.emit('message', {
@@ -52,7 +68,11 @@ PeerConnection.prototype.handleRemoteStreamRemoved = function(event) {
 
 PeerConnection.prototype.doCall = function() {
     console.log('Sending offer to peer');
-    this.pc.createOffer(this.setLocalAndSendMessage.bind(this));
+    this.pc.createOffer(this.setLocalAndSendMessage.bind(this),
+        function(error) {
+            console.error(error);
+        }
+    );
 };
 
 PeerConnection.prototype.setLocalAndSendMessage = function(sessionDescription) {
