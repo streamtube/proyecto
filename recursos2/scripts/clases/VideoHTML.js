@@ -43,7 +43,6 @@ Video.prototype.cargarVideo = function(streamWebCam) {
     document.body.appendChild(contenedor);
 
     this.mute.addEventListener("click", this.onClickMuteVideo.bind(this));
-
     this.volum.addEventListener("change", this.onChangeVolumVideo.bind(this));
 };
 

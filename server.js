@@ -27,20 +27,26 @@ io.sockets.on('connection', function (socket) {
     if (!io.isConnected)
         io.isConnected = true;
 
-    socket.on('new-channel', function (data) {
+    socket.on('new channel', function (data) {
         channels[data.nombre] = {
             nombre: data.nombre,
             creador: socket.id
         };
+        users[socket.id].channel = data.nombre;
+
         log(socket, 'Nuevo canal: '+data.nombre);
         onNewNamespace(data.nombre, socket.id);
         console.log('[+]','Escuchando el canal en la dirección', 'http://'+ip+':' + port +"/"+data.nombre, "\n");
-        socket.emit('canal_creado', {nombre:data.nombre});
-        socket.broadcast.emit('nuevo canal', {nombre:data.nombre});
+        socket.emit('canal creado', {nombre: data.nombre});
+        socket.broadcast.emit('nuevo canal', {nombre: data.nombre});
     });
 
-    socket.on('disconnect', function (channel) {
-        log(socket, "Cliente desconectado ", channel);
+    socket.on('disconnect', function() {
+        log(socket, "Cliente desconectado ");
+        if(users[socket.id]['channel']) {
+            var nombreCanalCreadoPorElUsuario = users[socket.id].channel;
+            delete channels[nombreCanalCreadoPorElUsuario];
+        }
         delete users[socket.id];
     });
 
@@ -57,8 +63,8 @@ function onNewNamespace(channel, sender) {
         }
 
         socket.on('message', function (data) {
-            if (socket.id == sender)
-                socket.broadcast.emit('message', data.data);
+            log(socket, "Enviando mensaje en el canal "+channel, data);
+            socket.broadcast.emit('message', data.data);
         });
 
         socket.on('youtube', function(data) {
@@ -66,7 +72,14 @@ function onNewNamespace(channel, sender) {
             socket.broadcast.emit('youtube', data);
         });
 
-        socket.emit('canal-conectado', {url: socket.handshake.headers.referrer+'?c='+channel+'&s='+socket.id});
+        socket.on('disconnect', function() {
+            log(socket, "Cliente desconectado del canal "+channel);
+            if(sender == socket.id) {
+                delete channels[channel];
+            }
+        });
+
+        socket.emit('canal conectado', {url: channel+'_'+socket.id});
     });
 }
 
@@ -77,7 +90,7 @@ function log(socket, message, extra) {
     if(extra) {
         console.log('[+]', extra);
     }
-    console.log('[+]','****** '+socket.id+' ******');
+    console.log('[+]','****** '+socket.id+' ******\n');
 }
 
 console.log('[+]','Escuchando en la dirección', 'http://'+ip+':' + port , "\n");
