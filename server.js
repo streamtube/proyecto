@@ -1,6 +1,6 @@
 var server  = require('http').createServer(),
     sio      = require('socket.io'),
-    port    = 8081;
+    port    = process.env.PORT || 8081;
 server.listen(port);
 var io = sio.listen(server, { log:true });
 

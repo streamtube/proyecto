@@ -1,16 +1,19 @@
 {
   "name": "streamtube",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Proyecto StreamTube ---------",
-  "main": "video.html",
+  "main": "index.html",
+    "engines": {
+        "node": "0.10.x"
+    },
   "dependencies": {
     "q": "~1.0.1",
     "socket.io": "~1.0.3"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+      "start": "node server.js",
+      "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

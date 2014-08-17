@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Video-Conferencing</title>
+    <link href="recursos/imagenes/favicon.ico" type="image/x-icon" rel="shortcut icon" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" type="text/css" href="recursos/css/estilo.css">
+
+    <!-- SCRIPTS -->
+    <script src="recursos/scripts/jquery.js"></script>
+    <script src="recursos/scripts/youtube.js"></script>
+    <script src='https://cdn.firebase.com/v0/firebase.js'></script>
+    <script src="recursos/scripts/RTCPeerConnection-v1.5.js"></script>
+    <script src="recursos/scripts/conference.js"></script>
+    <script src="recursos/scripts/configConference.js"></script>
+</head>
+
+<body>
+<a href="index-old.html" id="titulo" class="centrado">STREAMTUBE</a>
+<br>
+<article>
+    <div id="experiment">
+        <input id="conference-name" type="text"  placeholder="Nombre de la conferencia">
+        <button id="setup-new-room" class="setup">Crear</button>
+        <div id="rooms-list"></div>
+    </div>
+    <div id="contenedor">
+        <input id="youtubeid" placeholder="Título del vídeo de Youtube" type="text">
+        <button id="botoncrear" type="submit">Enviar</button>
+    </div>
+    <br>
+</article>
+<div id="search-container" style="margin: 0 auto;width: 51%;"></div>
+<div id="video-youtube" style="visibility: visible;display: block"></div>
+</body>
+</html>
