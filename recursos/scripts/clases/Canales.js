@@ -1,6 +1,4 @@
-var Canales = function() {
-
-};
+var Canales = function() {};
 
 Canales.prototype.crearCanal = function(nombreCanal) {
     var defer = Q.defer();
@@ -26,7 +24,7 @@ Canales.prototype.crearCanal = function(nombreCanal) {
 Canales.prototype.conectarseCanal = function(nombreCanal) {
     var defer = Q.defer();
     console.log("Camara conectada, procediendo a conectarse al canal "+ nombreCanal);
-    globals.socketCanal = io.connect(location.origin + ':8081/'+nombreCanal);
+    globals.socketCanal = io.connect(location.origin + '/' + nombreCanal);
     globals.socketCanal.on('canal conectado', function(urlObjeto) {
         console.log(urlObjeto.url);
         defer.resolve(urlObjeto);

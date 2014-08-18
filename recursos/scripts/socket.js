@@ -1,4 +1,4 @@
-globals.socket = io.connect(location.origin + ':8081');
+globals.socket = io.connect(location.origin);
 
 globals.socket.on('conectado', function(data) {
     console.dir(data);

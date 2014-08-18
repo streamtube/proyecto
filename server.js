@@ -1,8 +1,27 @@
-var server  = require('http').createServer(),
+var express = require('express'),
+    http  = require('http'),
     sio      = require('socket.io'),
-    port    = process.env.PORT || 8081;
-server.listen(port);
+    port    = process.env.PORT || 8081,
+    fs = require('fs'),
+    path = require('path');
+
+var app = express();
+// serve index.html for every path
+app.get('/', function(req, res) {
+    fs.readFile(path.join(__dirname, "/index.html"), 'utf8', function(err, data) {
+        if (err) throw err;
+        res.writeHead(200);
+        res.end(data);
+    });
+});
+// serve public folder
+app.use(express.static(__dirname + '/recursos'));
+app.use(express.static(__dirname + '/node_modules'));
+
+var server = http.createServer(app);
 var io = sio.listen(server, { log:true });
+
+server.listen(port);
 
 var ip = 'localhost';
 var os=require('os');
