@@ -19,7 +19,7 @@ app.use(express.static(__dirname + '/recursos'));
 app.use(express.static(__dirname + '/node_modules'));
 
 var server = http.createServer(app);
-var io = sio.listen(server, { log:true });
+var io = sio.listen(server, { log:false });
 
 server.listen(port);
 
@@ -64,7 +64,7 @@ io.sockets.on('connection', function (socket) {
         log(socket, "Cliente desconectado ");
         if(users[socket.id]['channel']) {
             var nombreCanalCreadoPorElUsuario = users[socket.id].channel;
-            delete channels[nombreCanalCreadoPorElUsuario];
+            //delete channels[nombreCanalCreadoPorElUsuario];
         }
         delete users[socket.id];
     });
@@ -82,8 +82,14 @@ function onNewNamespace(channel, sender) {
         }
 
         socket.on('message', function (data) {
-            log(socket, "Enviando mensaje en el canal "+channel, data);
-            socket.broadcast.emit('message', data.data);
+            data.socketId = socket.id;
+            if(data.type == 'candidate') {
+                console.log(socket.id, "ICE -> "+channel);
+            }
+            else {
+                log(socket, "Enviando mensaje en el canal "+channel, data);
+            }
+            socket.broadcast.emit('message', data);
         });
 
         socket.on('youtube', function(data) {
@@ -93,19 +99,19 @@ function onNewNamespace(channel, sender) {
 
         socket.on('disconnect', function() {
             log(socket, "Cliente desconectado del canal "+channel);
-            if(sender == socket.id) {
-                delete channels[channel];
-            }
         });
 
+        log(socket, "Cliente conectado al canal "+channel);
         socket.emit('canal conectado', {url: channel+'_'+socket.id});
+        socket.broadcast.emit('message', {type:'nueva_persona', socketId: socket.id});
     });
 }
 
 
 function log(socket, message, extra) {
+    var date = new Date();
     console.log('[+]','****** '+socket.id+' ******');
-    console.log('[+]', socket.handshake.time, " -> "+message);
+    console.log('[+]', date.toLocaleDateString(), " -> "+message);
     if(extra) {
         console.log('[+]', extra);
     }

@@ -1,61 +1,59 @@
-var PeerConnection = function() {
+var PeerConnection = function(socketId) {
+    /** @type {RTCPeerConnection} pc  */
     this.pc = null;
-
-    globals.socketCanal.on('message', function(message) {
-        console.log('[PeerConnection] Received message:', message);
-        if (message.type === 'offer') {
-            this.SDPReceived(message);
-        } else if (message.type === 'answer') {
-            this.answerSDPReceived(message);
-        } else if (message.type === 'candidate') {
-            this.ICEReceived(message);
-        } else if (message === 'bye') {
-            //handleRemoteHangup();
-        }
-    }.bind(this));
+    this.socketId = socketId;
 };
 
 PeerConnection.prototype.SDPReceived = function(message) {
-    console.log("[PeerConnection] Received SDP! -> Set remote description");
+    console.log("[PeerConnection] Received SDP! -> Set remote description", this.socketId);
     this.createPeerConnection();
     this.pc.setRemoteDescription(new RTCSessionDescription(message), this.remoteDescriptionSet.bind(this));
+    console.groupEnd();
 };
 
 PeerConnection.prototype.remoteDescriptionSet = function() {
     console.log("[PeerConnection] Remote Description set! -> Creating answer");
     var options = { 'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true } };
-    this.pc.createAnswer(this.setLocalAndSendMessage.bind(this),
+    this.pc.createAnswer(
+        this.setLocalAndSendMessage.bind(this),
         function(error) {
             console.error(error.message);
-            throw new Error(error);
+            console.groupEnd();
         }, options);
     this.remoteDescriptionAdded = true;
 };
 
 PeerConnection.prototype.answerSDPReceived = function(message) {
-    console.log("[PeerConnection] Answer SDP Received! -> Set remote description");
+    console.log("[PeerConnection] Answer SDP Received! -> Set remote description", this.socketId);
     this.pc.setRemoteDescription(new RTCSessionDescription(message), (function() {
-        console.log("[PeerConnection] Remote Description set! -> Doing nothing");
+        console.log("[PeerConnection] Remote Description set! -> Doing nothing", this.socketId);
         this.remoteDescriptionAdded = true;
-    }).bind(this));
+        console.groupEnd();
+    }).bind(this),
+    function(error) {
+        console.error(error);
+        console.groupEnd();
+    });
 };
 
 PeerConnection.prototype.ICEReceived = function(message) {
     if(!this.remoteDescriptionAdded) {
-        console.log("[PeerConnection] ICE Received! -> Do nothing because remote description is not added");
+        console.log("[PeerConnection] ICE Received! -> Do nothing because remote description is not added", this.socketId);
+        console.groupEnd();
         return;
     }
 
-    console.log("[PeerConnection] ICE Received! -> Add candidate");
+    console.log("[PeerConnection] ICE Received! -> Add candidate", this.socketId);
     //var params = {sdpMLineIndex: message.sdplineindex, candidate: message.candidate};
     var params = {sdpMLineIndex: message.label, candidate: message.candidate};
     this.pc.addIceCandidate(new RTCIceCandidate(params));
+    console.groupEnd();
 };
 
 
-PeerConnection.prototype.createPeerConnection = function() {
+PeerConnection.prototype.createPeerConnection = function(localStream) {
     if(this.pc) {
-        console.log("[PeerConnection] Ya he creado el peer connection. No lo crearé otra vez");
+        console.log("[PeerConnection] Ya he creado el peer connection. No lo crearé otra vez", this.socketId);
         return;
     }
 
@@ -65,10 +63,9 @@ PeerConnection.prototype.createPeerConnection = function() {
         {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
 
         this.pc = new RTCPeerConnection(pc_config);
-        this.pc.onicecandidate = this.handleIceCandidate.bind(this);
-        console.log('Created RTCPeerConnnection \n');
+        console.log('Created RTCPeerConnnection \n', this.socketId);
     } catch (e) {
-        console.log('Failed to create PeerConnection, exception: ' + e.message);
+        console.log('Failed to create PeerConnection, exception: ' + e.message, this.socketId);
         alert('Cannot create RTCPeerConnection object.');
         return;
     }
@@ -76,54 +73,55 @@ PeerConnection.prototype.createPeerConnection = function() {
     this.pc.onaddstream = this.handleRemoteStreamAdded.bind(this);
     this.pc.onremovestream = this.handleRemoteStreamRemoved.bind(this);
     this.pc.onicecandidate = this.handleIceCandidate.bind(this);
-};
 
-PeerConnection.prototype.addStream = function(stream) {
-    console.log("[PeerConnection] Añadiendo mi stream al peer connection");
-    this.pc.addStream(stream);
+    console.log("[PeerConnection] Añadiendo mi stream al peer connection", this.socketId);
+    this.pc.addStream(localStream);
 };
 
 PeerConnection.prototype.handleIceCandidate = function(event) {
-    console.log('[PeerConnection] handleIceCandidate event: ', event);
+    console.log('[PeerConnection] handleIceCandidate event: ', event, this.socketId);
     if (event.candidate) {
         globals.socketCanal.emit('message', {
             type: 'candidate',
             label: event.candidate.sdpMLineIndex,
             id: event.candidate.sdpMid,
-            candidate: event.candidate.candidate});
+            candidate: event.candidate.candidate,
+            socketId: this.socketId
+        });
     } else {
         console.log('End of candidates.');
     }
+    console.groupEnd();
 };
 
 PeerConnection.prototype.handleRemoteStreamAdded = function(event) {
-    console.log('Remote stream added.');
+    console.log('[PeerConnection] Remote stream added!!!! -> Creating remote video', this.socketId);
     // reattachMediaStream(miniVideo, localVideo);
     var remoteVideo = new Video();
     remoteVideo.cargarVideo(event.stream);
+    console.groupEnd();
     //  waitForRemoteVideo();
 };
 
 PeerConnection.prototype.handleRemoteStreamRemoved = function(event) {
-    console.log('Remote stream removed. Event: ', event);
+    console.log('[PeerConnection] Remote stream removed. Event: ', event, this.socketId);
+    console.groupEnd();
 };
 
 PeerConnection.prototype.doCall = function() {
-    console.log('Sending offer to peer');
-    this.pc.createOffer(this.setLocalAndSendMessage.bind(this),
-        function(error) {
-            console.error(error);
-        }
-    );
+    console.log('[PeerConnection] Sending offer to peer');
+    this.pc.createOffer(this.setLocalAndSendMessage.bind(this), function(error) { console.error(error); });
 };
 
 PeerConnection.prototype.setLocalAndSendMessage = function(sessionDescription) {
     // Set Opus as the preferred codec in SDP if Opus is present.
     sessionDescription.sdp = this.preferOpus(sessionDescription.sdp);
-    console.log("[PeerConnection] Answer created! -> set local description with this answer", sessionDescription);
+    console.log("[PeerConnection] Answer created! -> set local description with this answer", sessionDescription, this.socketId);
     this.pc.setLocalDescription(sessionDescription);
-    console.log("[PeerConnection] Local description set -> send to the other peer the answer");
+    console.log("[PeerConnection] Local description set -> send to the other peer the answer", this.socketId);
+    sessionDescription.socketId = this.socketId;
     globals.socketCanal.emit('message', sessionDescription);
+    console.groupEnd();
 };
 
 PeerConnection.prototype.preferOpus = function(sdp) {

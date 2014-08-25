@@ -13,47 +13,39 @@ function botonCrearCanalClicado() {
 
     var canales = new Canales();
     var promiseCrearCanal = canales.crearCanal(channelName);
-    promiseCrearCanal
-        .then(function(urlObjeto) {
-            modificarVistaParaElCanal(channelName, urlObjeto.url);
-            var localWebCam = new Webcam();
-            return localWebCam.callWebCam();
-        })
-        .then(function(localStream) {
-            var peerConnection = new PeerConnection();
-            peerConnection.createPeerConnection();
-            peerConnection.addStream(localStream);
-            peerConnection.doCall();
-        })
-        .catch(function(error) {
-            alert(error);
-            console.error(error);
-        });
+    promiseCrearCanal.then(unirseAUnCanal);
 
     return true;
 }
 
-function botonUnirseAUnCanalClicado() {
-    var channelName = this.canal;
+globals.socket.on('canales', function listaDeCanales(canales) {
+    var listaCanales = document.getElementById('lista_canales');
+    var unorderedList = document.createElement('ul');
+    for(canal in canales) {
+        if(canales.hasOwnProperty(canal)) {
+            var listItem = document.createElement('li');
+            var boton = document.createElement('button');
+            boton.type = 'button';
+            boton.canal = canales[canal].nombre;
+            boton.textContent = 'Unirse al canal '+canales[canal].nombre+' de '+canales[canal].creador;
+            boton.addEventListener('click', function() {
+                unirseAUnCanal(canales[canal].nombre);
+            });
+
+            listItem.appendChild(boton);
+            unorderedList.appendChild(listItem);
+        }
+    }
+
+    listaCanales.appendChild(unorderedList);
+});
+
+function unirseAUnCanal(channelName) {
     var canales = new Canales();
-    var promiseConectarseCanal = canales.conectarseCanal(channelName);
-    promiseConectarseCanal
+    canales.conectarseCanal(channelName)
         .then(function(urlObjeto) {
             modificarVistaParaElCanal(channelName, urlObjeto.url);
-            var localWebCam = new Webcam();
-            return localWebCam.callWebCam();
-        })
-        .then(function(localStream) {
-            var peerConnection = new PeerConnection();
-            peerConnection.createPeerConnection();
-            peerConnection.addStream(localStream);
-            peerConnection.doCall();
-        })
-        .catch(function(error) {
-            alert(error);
-            console.error(error);
         });
-
     return true;
 }
 
@@ -63,5 +55,5 @@ function modificarVistaParaElCanal(channelName, url) {
     channelContent.style.display = "block";
     var titulo = channelContent.querySelector('.titulo');
     titulo.textContent = channelName;
-    history.pushState("Canal "+channelName, "Canal "+channelName, 'video.html?u='+url);
+    history.pushState("Canal "+channelName, "Canal "+channelName, '?u='+url);
 }

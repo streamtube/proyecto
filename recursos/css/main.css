@@ -32,6 +32,11 @@ header {
     vertical-align: top;
 }
 
+.titulo a {
+    text-decoration: none;
+    color: white;
+}
+
 .bloque_nuevo_nombre {
     display: inline-block;
     top: 5px;

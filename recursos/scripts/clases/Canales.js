@@ -2,33 +2,80 @@ var Canales = function() {};
 
 Canales.prototype.crearCanal = function(nombreCanal) {
     var defer = Q.defer();
+
     globals.socket.emit('new channel', {nombre: nombreCanal});
-
-    globals.socket.on('canal creado', (function() {
-        var conexionCanalPromise = this.conectarseCanal(nombreCanal);
-        conexionCanalPromise.then(function(urlObjeto) {
-            defer.resolve(urlObjeto);
-        });
-        conexionCanalPromise.fail(function(error) {
-            defer.reject(error);
-        });
-    }).bind(this));
-
-    globals.socket.on('canal no creado', function canalCreadoError(error) {
-        defer.reject(new Error(error));
-    });
+    globals.socket.on('canal creado', function() { defer.resolve(nombreCanal); });
+    globals.socket.on('canal no creado', function(error) { defer.reject(new Error(error)); });
 
     return defer.promise;
 };
 
 Canales.prototype.conectarseCanal = function(nombreCanal) {
     var defer = Q.defer();
-    console.log("Camara conectada, procediendo a conectarse al canal "+ nombreCanal);
+    console.log("Procediendo a conectarse al canal "+ nombreCanal);
     globals.socketCanal = io.connect(location.origin + '/' + nombreCanal);
+    var self = this;
     globals.socketCanal.on('canal conectado', function(urlObjeto) {
-        console.log(urlObjeto.url);
+        console.log("Conectado al canal "+ nombreCanal);
         defer.resolve(urlObjeto);
+        self.unirseAlCanal.call(self);
     });
 
     return defer.promise;
+};
+
+Canales.prototype.unirseAlCanal = function() {
+    var self = this;
+    var localWebCam = new Webcam();
+    localWebCam.callWebCam()
+        .then(function(localStream) {
+            console.log("Camara aceptada", localStream);
+            globals.localStream = localStream;
+            globals.socketCanal.on('message', self.mensajeRecibido.bind(self));
+        })
+        .catch(function(error) {
+            alert(error.name);
+            console.error(error);
+        });
+};
+
+Canales.prototype.mensajeRecibido = function(message) {
+    console.group('[PeerConnection] Mensaje Recibido "%s"', message.type);
+    if(message.type === 'nueva_persona') {
+        console.log(message.socketId);
+        this.seHaUnidoUnaNuevaPersonaAlCanal(message.socketId);
+        console.groupEnd();
+        return;
+    }
+
+    if(!globals.peerConnections[message.socketId]) {
+        console.log("No esta creado aun el peer connection del "+message.socketId);
+        console.groupEnd();
+        return;
+    }
+
+    var peerConnection = globals.peerConnections[message.socketId];
+
+    if (message.type === 'offer') {
+        peerConnection.SDPReceived(message);
+    } else if (message.type === 'answer') {
+        peerConnection.answerSDPReceived(message);
+    } else if (message.type === 'candidate') {
+        peerConnection.ICEReceived(message);
+    } else if (message === 'bye') {
+        //handleRemoteHangup();
+    }
+};
+
+Canales.prototype.seHaUnidoUnaNuevaPersonaAlCanal = function(socketId) {
+    console.log("Se ha unido una nueva persona al canal");
+    if(!globals.localStream) {
+        console.log("Pero yo aun no he agregado mi cam!");
+        return;
+    }
+
+    console.log("Creando Peerconnection");
+    globals.peerConnections[socketId] = new PeerConnection(socketId);
+    globals.peerConnections[socketId].createPeerConnection(globals.localStream);
+    globals.peerConnections[socketId].doCall();
 };
