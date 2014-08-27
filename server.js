@@ -109,13 +109,30 @@ function onNewNamespace(channel, sender) {
 
 
 function log(socket, message, extra) {
-    var date = new Date();
-    console.log('[+]','****** '+socket.id+' ******');
-    console.log('[+]', date.toLocaleDateString(), " -> "+message);
+    var date = new Date(),
+        user_agent = socket.handshake.headers['user-agent'],
+        os = "Linux",
+        browser = "Chrome";
+    if(/Windows/.test(user_agent)) {
+        os = "Windows";
+    }
+
+    if(/Firefox/.test(user_agent)) {
+        browser = "Firefox";
+    }
+    else if(/Chrome/.test(user_agent)) {
+        browser = "Chrome";
+    }
+    else {
+        browser = "IE?";
+    }
+
+    console.log('[+]','****** '+os+' in '+browser+' ******');
+    console.log('[+]', date.toLocaleTimeString(), " -> "+message);
     if(extra) {
         console.log('[+]', extra);
     }
-    console.log('[+]','****** '+socket.id+' ******\n');
+    console.log('[+]','****** '+os+' in '+browser+' ******\n');
 }
 
 console.log('[+]','Escuchando en la dirección', 'http://'+ip+':' + port , "\n");

@@ -50,8 +50,9 @@ Canales.prototype.mensajeRecibido = function(message) {
 
     if(!globals.peerConnections[message.socketId]) {
         console.log("No esta creado aun el peer connection del "+message.socketId);
-        console.groupEnd();
-        return;
+        console.log("Creando Peerconnection");
+        globals.peerConnections[message.socketId] = new PeerConnection(message.socketId);
+        globals.peerConnections[message.socketId].createPeerConnection(globals.localStream);
     }
 
     var peerConnection = globals.peerConnections[message.socketId];
