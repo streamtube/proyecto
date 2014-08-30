@@ -17,9 +17,7 @@ Video.prototype.cargarVideo = function(streamWebCam) {
     this.video.className = "video";
     this.video.autoplay = true;
 
-    this.video.src = window.URL.createObjectURL(streamWebCam);
-
-    this.video.play();
+    attachMediaStream(this.video, streamWebCam);
 
     var conBotones = document.createElement("div");
     conBotones.className = "conBotones";

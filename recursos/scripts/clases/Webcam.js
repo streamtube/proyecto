@@ -1,8 +1,3 @@
-navigator.getMedia = ( navigator.getUserMedia ||
-                       navigator.webkitGetUserMedia ||
-                       navigator.mozGetUserMedia ||
-                       navigator.msGetUserMedia);
-
 var Webcam = function() {
     this.stream = null;
 };
@@ -15,7 +10,7 @@ Webcam.prototype.callbackVideoAceptado = function(streamWebCam) {
 
 Webcam.prototype.callWebCam = function() {
     var defer = Q.defer();
-    navigator.getMedia(
+    getUserMedia(
         {video: true,audio: true},
         function(streamwebcam) { defer.resolve(streamwebcam);},
         function(error) { defer.reject(error); }

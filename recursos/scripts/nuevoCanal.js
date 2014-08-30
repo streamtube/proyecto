@@ -19,6 +19,13 @@ function botonCrearCanalClicado() {
 }
 
 globals.socket.on('canales', function listaDeCanales(canales) {
+    if(!canales) {
+        return;
+    }
+    else {
+        document.getElementById('msg_no_hay_canales').style.display = 'none';
+    }
+
     var listaCanales = document.getElementById('lista_canales');
     var unorderedList = document.createElement('ul');
     for(canal in canales) {
@@ -50,10 +57,23 @@ function unirseAUnCanal(channelName) {
 }
 
 function modificarVistaParaElCanal(channelName, url) {
-    document.getElementById('home-content').style.display = "none";
+    document.getElementById('home_content').style.display = "none";
     var channelContent = document.getElementById('channel-content');
     channelContent.style.display = "block";
     var titulo = channelContent.querySelector('.titulo');
     titulo.textContent = channelName;
     history.pushState("Canal "+channelName, "Canal "+channelName, '?u='+url);
+}
+
+function enviarTuWebcam() {
+    var localWebCam = new Webcam();
+    localWebCam.callWebCam()
+        .then(function(localStream) {
+            console.log("Camara aceptada", localStream);
+            globals.localStream = localStream;
+        })
+        .catch(function(error) {
+            alert(error.name);
+            console.error(error);
+        });
 }

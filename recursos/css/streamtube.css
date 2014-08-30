@@ -1,0 +1,128 @@
+@font-face {
+    font-family: 'BolsterBold';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../fonts/BolsterBoldBold.ttf');
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+.webcam_block {
+    display: inline-block;
+    border: 2px solid green;
+    text-align: center;
+}
+
+.boton_compartir_webcam {
+    position: relative;
+    top: 100px;
+    width: 165px;
+}
+
+.izquierda {
+    margin: 0;
+    padding-left: 10px;
+    text-align: left;
+    display: block;
+}
+
+header {
+    box-shadow: 0 2px 13px 0 gray;
+    height: 50px;
+}
+
+#home_content {
+    margin: 1em;
+}
+
+.titulo {
+    font-family: BolsterBold, sans-serif;
+    color: white;
+    text-shadow: 2px 1px 6px black;
+    font-size: 30px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.titulo a {
+    text-decoration: none;
+    color: white;
+}
+
+.bloque_nuevo_nombre {
+    display: inline-block;
+    top: 5px;
+    position: relative;
+    left: 20px;
+}
+
+.bloque_nuevo_nombre input {
+    box-shadow: 0 0 10px 0 green;
+    width: 200px;
+    text-align: center;
+}
+
+.bloque_nuevo_nombre span {
+    font-family: sans-serif;
+    text-align: center;
+    color: gray;
+}
+
+.contenedor {
+    position: relative;
+    z-index: 0;
+    display: inline;
+    margin: 0 auto;
+}
+
+.conBotones {
+    bottom: 10px;
+    left: 10px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+}
+
+.mute {
+    position: relative;
+    top: -2px;
+}
+
+.boton {
+    background-color: black;
+    border-radius: 20px 5px;
+    color: white;
+}
+
+.volum {
+    position: relative;
+    top: 5px;
+    width: 80px;
+}
+
+.video {
+    width: 200px;
+}
+
+.letrita {
+    font-size: 10px;
+}
+
+.bloque {
+    display: block;
+}
+
+#lista_canales {
+    padding: 1em;
+    border-top: 1px solid black;
+    margin-top: 5em;
+    text-align: center;
+}

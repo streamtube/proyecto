@@ -25,18 +25,7 @@ Canales.prototype.conectarseCanal = function(nombreCanal) {
 };
 
 Canales.prototype.unirseAlCanal = function() {
-    var self = this;
-    var localWebCam = new Webcam();
-    localWebCam.callWebCam()
-        .then(function(localStream) {
-            console.log("Camara aceptada", localStream);
-            globals.localStream = localStream;
-            globals.socketCanal.on('message', self.mensajeRecibido.bind(self));
-        })
-        .catch(function(error) {
-            alert(error.name);
-            console.error(error);
-        });
+    globals.socketCanal.on('message', this.mensajeRecibido.bind(this));
 };
 
 Canales.prototype.mensajeRecibido = function(message) {
