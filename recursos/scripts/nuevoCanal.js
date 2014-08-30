@@ -19,7 +19,7 @@ function botonCrearCanalClicado() {
 }
 
 globals.socket.on('canales', function listaDeCanales(canales) {
-    if(!canales) {
+    if(!canales || !Object.keys(canales).length) {
         return;
     }
     else {
