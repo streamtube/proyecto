@@ -18,14 +18,10 @@ Canales.prototype.conectarseCanal = function(nombreCanal) {
     globals.socketCanal.on('canal conectado', function(urlObjeto) {
         console.log("Conectado al canal "+ nombreCanal);
         defer.resolve(urlObjeto);
-        self.unirseAlCanal.call(self);
+        globals.socketCanal.on('message', self.mensajeRecibido.bind(self));
     });
 
     return defer.promise;
-};
-
-Canales.prototype.unirseAlCanal = function() {
-    globals.socketCanal.on('message', this.mensajeRecibido.bind(this));
 };
 
 Canales.prototype.mensajeRecibido = function(message) {

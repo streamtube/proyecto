@@ -3,9 +3,27 @@ var express = require('express'),
     sio      = require('socket.io'),
     port    = process.env.PORT || 8081,
     fs = require('fs'),
-    path = require('path');
+    cookieParserExports = require('cookie-parser'),
+    cookie = require('cookie'),
+    session = require('express-session'),
+    path = require('path'),
+    debugExports = require('debug');
+
+debugExports.enable('*');
+
+var debug = debugExports('streamtube');
 
 var app = express();
+
+app.use(cookieParserExports());
+app.use(session({
+        secret: 'SECRET',
+        cookie: {httpOnly: true},
+        saveUninitialized: true,
+        resave: true
+    }
+));
+
 // serve index.html for every path
 app.get('/', function(req, res) {
     fs.readFile(path.join(__dirname, "/index.html"), 'utf8', function(err, data) {
@@ -19,7 +37,7 @@ app.use(express.static(__dirname + '/recursos'));
 app.use(express.static(__dirname + '/node_modules'));
 
 var server = http.createServer(app);
-var io = sio.listen(server, { log:false });
+var io = sio.listen(server);
 
 server.listen(port);
 
@@ -40,8 +58,31 @@ for (var dev in ifaces) {
 var users = {};
 var channels = {};
 
+io.use(function(socket, next) {
+    debug("Cookie:", socket.request.headers.cookie);
+    if (socket.request.headers.cookie) {
+        socket.request.cookie = cookie.parse(socket.request.headers.cookie);
+        debug("Parsed Cookie:", socket.request.cookie);
+        var signedCookie = socket.request.cookie['connect.sid'];
+        socket.request.sessionID = cookieParserExports.signedCookie(signedCookie, 'SECRET');
+        if (signedCookie == socket.request.sessionID) {
+            debug("Cookie is invalid.");
+            return next(new Error('Cookie is invalid.'));
+        }
+    } else {
+        debug("No cookie transmitted.");
+        return next(new Error('No cookie transmitted.'));
+    }
+
+    debug("Accept cookie");
+    return next();
+});
+
+
 io.sockets.on('connection', function (socket) {
     log(socket, "Cliente conectado", socket.handshake.headers['user-agent']);
+    var cookie_string = cookie.parse(socket.request.headers.cookie);
+    debug(cookie_string);
 
     if (!io.isConnected)
         io.isConnected = true;
@@ -55,7 +96,7 @@ io.sockets.on('connection', function (socket) {
 
         log(socket, 'Nuevo canal: '+data.nombre);
         onNewNamespace(data.nombre, socket.id);
-        console.log('[+]','Escuchando el canal en la dirección', 'http://'+ip+':' + port +"/"+data.nombre, "\n");
+        debug('[+]','Escuchando el canal en la dirección', 'http://'+ip+':' + port +"/"+data.nombre, "\n");
         socket.emit('canal creado', {nombre: data.nombre});
         socket.broadcast.emit('nuevo canal', {nombre: data.nombre});
     });
@@ -84,7 +125,7 @@ function onNewNamespace(channel, sender) {
         socket.on('message', function (data) {
             data.socketId = socket.id;
             if(data.type == 'candidate') {
-                console.log(socket.id, "ICE -> "+channel);
+                debug(socket.id, "ICE -> "+channel);
             }
             else {
                 log(socket, "Enviando mensaje en el canal "+channel, data);
@@ -127,12 +168,12 @@ function log(socket, message, extra) {
         browser = "IE?";
     }
 
-    console.log('[+]','****** '+os+' in '+browser+' ******');
-    console.log('[+]', date.toLocaleTimeString(), " -> "+message);
+    debug('[+]','****** '+os+' in '+browser+' ******');
+    debug('[+]', date.toLocaleTimeString(), " -> "+message);
     if(extra) {
-        console.log('[+]', extra);
+        debug('[+]', extra);
     }
-    console.log('[+]','****** '+os+' in '+browser+' ******\n');
+    debug('[+]','****** '+os+' in '+browser+' ******\n');
 }
 
-console.log('[+]','Escuchando en la dirección', 'http://'+ip+':' + port , "\n");
+debug('[+]','Escuchando en la dirección', 'http://'+ip+':' + port , "\n");

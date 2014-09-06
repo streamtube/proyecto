@@ -1,6 +1,9 @@
 var button_new_channel = document.getElementById('js_new_channel_buton');
 button_new_channel.addEventListener('click', botonCrearCanalClicado);
 
+var button_add_camera = document.querySelector('.boton_compartir_webcam');
+button_add_camera.addEventListener('click', enviarTuWebcam);
+
 function botonCrearCanalClicado() {
     var errorBloque = document.getElementById('js_new_channel_error');
     errorBloque.textContent = '';
@@ -57,6 +60,7 @@ function unirseAUnCanal(channelName) {
 }
 
 function modificarVistaParaElCanal(channelName, url) {
+    document.querySelector('boton_compartir_webcam').style.display = 'block';
     document.getElementById('home_content').style.display = "none";
     var channelContent = document.getElementById('channel-content');
     channelContent.style.display = "block";
