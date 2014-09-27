@@ -16,7 +16,7 @@ Canales.prototype.conectarseCanal = function(nombreCanal) {
     globals.socketCanal = io.connect(location.origin + '/' + nombreCanal);
     var self = this;
     globals.socketCanal.on('canal conectado', function(urlObjeto) {
-        console.log("Conectado al canal "+ nombreCanal);
+        console.log("Conectado al canal "+ nombreCanal, urlObjeto);
         defer.resolve(urlObjeto);
         globals.socketCanal.on('message', self.mensajeRecibido.bind(self));
     });

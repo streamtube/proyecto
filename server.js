@@ -7,7 +7,9 @@ var express = require('express'),
     cookie = require('cookie'),
     session = require('express-session'),
     path = require('path'),
-    debugExports = require('debug');
+    debugExports = require('debug'),
+    chance = require('chance')(),
+    secret = 'StreamTube2014';
 
 debugExports.enable('*');
 
@@ -17,7 +19,7 @@ var app = express();
 
 app.use(cookieParserExports());
 app.use(session({
-        secret: 'SECRET',
+        secret: secret,
         cookie: {httpOnly: true},
         saveUninitialized: true,
         resave: true
@@ -59,12 +61,10 @@ var users = {};
 var channels = {};
 
 io.use(function(socket, next) {
-    debug("Cookie:", socket.request.headers.cookie);
     if (socket.request.headers.cookie) {
         socket.request.cookie = cookie.parse(socket.request.headers.cookie);
-        debug("Parsed Cookie:", socket.request.cookie);
         var signedCookie = socket.request.cookie['connect.sid'];
-        socket.request.sessionID = cookieParserExports.signedCookie(signedCookie, 'SECRET');
+        socket.request.sessionID = cookieParserExports.signedCookie(signedCookie, secret);
         if (signedCookie == socket.request.sessionID) {
             debug("Cookie is invalid.");
             return next(new Error('Cookie is invalid.'));
@@ -73,16 +73,22 @@ io.use(function(socket, next) {
         debug("No cookie transmitted.");
         return next(new Error('No cookie transmitted.'));
     }
-
-    debug("Accept cookie");
     return next();
 });
 
 
 io.sockets.on('connection', function (socket) {
-    log(socket, "Cliente conectado", socket.handshake.headers['user-agent']);
-    var cookie_string = cookie.parse(socket.request.headers.cookie);
-    debug(cookie_string);
+    var currentUser = {username: false};
+    if(users.hasOwnProperty(socket.request.sessionID)) {
+        currentUser = users[socket.request.sessionID];
+    }
+    else {
+        currentUser.username = chance.first();
+        users[socket.request.sessionID] = currentUser;
+    }
+
+    log(socket, "Cliente conectado: "+currentUser.username);
+
 
     if (!io.isConnected)
         io.isConnected = true;
@@ -90,12 +96,12 @@ io.sockets.on('connection', function (socket) {
     socket.on('new channel', function (data) {
         channels[data.nombre] = {
             nombre: data.nombre,
-            creador: socket.id
+            creador: socket.request.sessionID
         };
-        users[socket.id].channel = data.nombre;
+        users[socket.request.sessionID].channel = data.nombre;
 
         log(socket, 'Nuevo canal: '+data.nombre);
-        onNewNamespace(data.nombre, socket.id);
+        onNewNamespace(data.nombre, socket.request.sessionID);
         debug('[+]','Escuchando el canal en la dirección', 'http://'+ip+':' + port +"/"+data.nombre, "\n");
         socket.emit('canal creado', {nombre: data.nombre});
         socket.broadcast.emit('nuevo canal', {nombre: data.nombre});
@@ -103,15 +109,9 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('disconnect', function() {
         log(socket, "Cliente desconectado ");
-        if(users[socket.id]['channel']) {
-            var nombreCanalCreadoPorElUsuario = users[socket.id].channel;
-            //delete channels[nombreCanalCreadoPorElUsuario];
-        }
-        delete users[socket.id];
     });
 
-    users[socket.id] = {name: socket.id};
-    socket.emit('conectado', socket.id);
+    socket.emit('conectado', currentUser.username);
     socket.emit('canales', channels);
 });
 
@@ -123,28 +123,33 @@ function onNewNamespace(channel, sender) {
         }
 
         socket.on('message', function (data) {
-            data.socketId = socket.id;
+            var currentUser = users[socket.request.sessionID];
+            data.socketId = socket.request.sessionID;
             if(data.type == 'candidate') {
-                debug(socket.id, "ICE -> "+channel);
+                debug(socket.id, currentUser.username+" envia ICE en el canal "+channel);
             }
             else {
-                log(socket, "Enviando mensaje en el canal "+channel, data);
+                log(socket, currentUser.username+" envia mensaje en el canal "+channel, data);
             }
             socket.broadcast.emit('message', data);
         });
 
         socket.on('youtube', function(data) {
-            log(socket, "Reenviando mensaje de youtube a "+channel, data);
+            var currentUser = users[socket.request.sessionID];
+            log(socket, currentUser.username+" envia mensaje de youtube a "+channel, data);
             socket.broadcast.emit('youtube', data);
         });
 
         socket.on('disconnect', function() {
-            log(socket, "Cliente desconectado del canal "+channel);
+            var currentUser = users[socket.request.sessionID];
+            log(socket, currentUser.username+" desconectado del canal "+channel);
         });
 
-        log(socket, "Cliente conectado al canal "+channel);
-        socket.emit('canal conectado', {url: channel+'_'+socket.id});
-        socket.broadcast.emit('message', {type:'nueva_persona', socketId: socket.id});
+
+        var currentUser = users[socket.request.sessionID];
+        log(socket, currentUser.username +" conectado al canal "+channel);
+        socket.emit('canal conectado', {url: channel+'_'+socket.request.sessionID});
+        socket.broadcast.emit('message', {type:'nueva_persona', socketId: socket.request.sessionID});
     });
 }
 
