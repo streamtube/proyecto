@@ -25,9 +25,8 @@ globals.socket.on('canales', function listaDeCanales(canales) {
     if(!canales || !Object.keys(canales).length) {
         return;
     }
-    else {
-        document.getElementById('msg_no_hay_canales').style.display = 'none';
-    }
+
+    document.getElementById('msg_no_hay_canales').style.display = 'none';
 
     var listaCanales = document.getElementById('lista_canales');
     var unorderedList = document.createElement('ul');
@@ -52,18 +51,17 @@ globals.socket.on('canales', function listaDeCanales(canales) {
 
 function unirseAUnCanal(channelName) {
     var canales = new Canales();
-    canales.conectarseCanal(channelName)
-        .then(function(urlObjeto) {
+    canales.conectarseCanal(channelName).then(function(urlObjeto) {
             modificarVistaParaElCanal(channelName, urlObjeto.url);
         });
     return true;
 }
 
 function modificarVistaParaElCanal(channelName, url) {
-    document.querySelector('boton_compartir_webcam').style.display = 'block';
-    document.getElementById('home_content').style.display = "none";
     var channelContent = document.getElementById('channel-content');
     channelContent.style.display = "block";
+    document.querySelector('.boton_compartir_webcam').style.display = 'block';
+    document.getElementById('home_content').style.display = "none";
     var titulo = channelContent.querySelector('.titulo');
     titulo.textContent = channelName;
     history.pushState("Canal "+channelName, "Canal "+channelName, '?u='+url);
@@ -71,10 +69,10 @@ function modificarVistaParaElCanal(channelName, url) {
 
 function enviarTuWebcam() {
     var localWebCam = new Webcam();
-    localWebCam.callWebCam()
-        .then(function(localStream) {
+    localWebCam.callWebCam().then(function(localStream) {
             console.log("Camara aceptada", localStream);
             globals.localStream = localStream;
+            document.querySelector('.boton_compartir_webcam').style.display = 'none';
         })
         .catch(function(error) {
             alert(error.name);

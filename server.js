@@ -148,7 +148,7 @@ function onNewNamespace(channel, sender) {
 
         var currentUser = users[socket.request.sessionID];
         log(socket, currentUser.username +" conectado al canal "+channel);
-        socket.emit('canal conectado', {url: channel+'_'+socket.request.sessionID});
+        socket.emit('canal conectado', {url: channel+'_'+currentUser.username});
         socket.broadcast.emit('message', {type:'nueva_persona', socketId: socket.request.sessionID});
     });
 }
